@@ -1,0 +1,10 @@
+<% if @inquiry.bids.any? %>
+  <ul id="current_bids">
+    <% @inquiry.bids.each do |bid| %>
+      <%= content_tag :li, number_to_currency(bid.amount) if bid.amount %>
+    <% end %>
+    <%= content_tag :li, "(#{pluralize @inquiry.bids.count, 'bid'})" %>
+  </ul>
+<% else %>
+  None yet
+<% end %>

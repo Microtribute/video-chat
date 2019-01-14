@@ -1,0 +1,28 @@
+<div style="font-size:1.5em;text-align:center;border:1px ">Upload Homepage Image for Attorney <%= @lawyer.full_name %> <span style="font-size:1em;"> <%= link_to "List of Attorney Homepage Images", admin_homepage_images_path %> </span>
+</div>
+<hr/>
+<div style="font-size:1.5em;border:1px solid;">
+<% errors = @homepage_image.errors %>
+<%= form_for @homepage_image, :url =>admin_homepage_images_path do |f| %>
+  <% if @homepage_image.errors.size > 0 %>
+    <div style="border: 1px solid red;padding: 5px;margin: 10px 10px 20px 100px;width: 500px;">
+      The following errors prevented from creating image <br/>
+      <ul>
+        <% errors.full_messages.each{|error| %>
+          <li><%= error %></li>
+        <% } %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= f.hidden_field :lawyer_id, :value =>@lawyer.id %>
+  <div style="margin: 10px 10px 10px 270px;font-size:1.5em;" >Upload Photo: </div>
+    <div style="margin: 10px 10px 10px 270px;">  <%= f.file_field :photo %></div>
+
+  <div style="margin: 10px 10px 10px 270px;">
+    <%= f.submit 'Save Homepage Image' %>
+    &nbsp; &nbsp; or &nbsp; <%= link_to "Cancel", root_path %>
+  </div>
+<% end %>
+</div>
+

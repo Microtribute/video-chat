@@ -1,0 +1,22 @@
+= content_tag :h3, "#{@attorney.first_name}'s fixed-price offers:" do
+  = content_tag :span, "#{number_to_currency(offering_template.fee, precision: 0)} flat fee"
+= hidden_field(:current, :lid)
+.action
+  .price
+= link_to_unless_current(image_tag(lawyer.photo.url(:thumb), class: "hide_on_attorneys"), attorney_path(lawyer, slug: lawyer.slug))
+.info
+  %h3
+    = link_to_unless_current "#{offering_template.name}", offering_template
+  = simple_format offering_template.description, class: "description"
+  -# if offering_template.practice_area.present?
+    %p.last
+      %strong Practice area: #{offering_template.practice_area.name}
+  %p.hide_on_attorneys
+    Delivered by: #{link_to lawyer.full_name, attorney_path(lawyer, slug: lawyer.slug)}
+    %span.status= status_message(lawyer)
+  -#.action-buttons
+    = start_or_schedule_button(lawyer)
+    - if lawyer.is_online && !lawyer.is_busy && lawyer.phone.present?
+      = start_phone_consultation(lawyer)
+.clear
+/ END RESULT INFO

@@ -1,0 +1,26 @@
+<div id="page" class="signup">
+  <%= notice text: "To start the phone consultation, enter your phone number. If #{@lawyer.full_name} is available, you’ll be connected by phone momentarily.",
+    avatar: @lawyer.photo %>
+
+  <div>
+    <%= form_tag create_call_path(:lawyer_id =>params[:id]), :id=>"phone_input_form" do %>
+      <span class="phone-label">Your phone number:</span><br/>
+      <input type="text" id="client_number" value="<%= current_user.phone || params[:number] %>" name="client_number" />
+      <%= submit_tag "Continue", class: "button" %>
+    <% end %>
+  </div>
+</div>
+
+<%= javascript_tag do %>
+  /*$('#phone_input_form').submit(function() {
+    var phone_reg_ex = /((\(\d{3}\) ?)|(\d{3}-))?\d{3}-\d{4}/
+    var phone = $('#client_number').val();
+    if (phone_reg_ex.test(phone)) {
+      $.prompt("valid phone number");
+      return true;
+    } else {
+      $.prompt("Invalid phone number");
+      return false;
+   }
+  });*/
+<% end %>

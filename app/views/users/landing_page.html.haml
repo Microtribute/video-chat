@@ -1,0 +1,233 @@
+- hms = HomepageImage.all
+- default_image = hms.sample || HomepageImage.new(:lawyer => Lawyer.new)
+- lawyer = default_image.lawyer
+- practice_area_text=""
+- practice_area_text = "Advising on #{lawyer.practice_areas_listing} law. "
+- description = practice_area_text #+ "#{lawyer.free_consultation_duration} minutes free consultation, then #{number_to_currency (lawyer.rate + AppParameter.service_charge_value)}/minute."
+- title "Legal advice online. Chat with a lawyer now on Lawdingo."
+- if params[:reset_email_notice].present?
+  %p.notice
+    Thanks - please check your email for instructions on resetting your password.
+    %a#close_notice{:href => "#"} Close
+    / Image carousel block with a link to json file consisting of data about previewed lawyers
+    -#.image-carousel{:dataurl => "/search/carsousel_images.json"}
+      .carousel-image
+        = image_tag default_image.photo.url(:large), :alt => ""
+      .carousel-description
+        %h4= link_to "Attorney #{lawyer.full_name}", attorney_path(lawyer, slug: lawyer.slug)
+        %span= description
+    / Filtering form
+#top_content
+  #center_area
+    .white_glow
+      .start_off_info
+        -#%a{:href => "/lawyers"}
+          = image_tag('start_off_info.png', :alt => '')
+        %h1= @tagline
+        %p= @subtext[:first]
+        / %p= @subtext[:second]
+        %span.browse_lawyers_button
+          = link_to "Get Started", lawyers_path, class: ""
+        = image_tag('homepage_or.png', :alt => '', :style => 'margin-top:30px;')
+        = render partial: "questions/home_form", locals: { type: "lawyer" }
+        -#%small
+          Lawyer? #{link_to "Apply here!", new_lawyer_path}
+      .slider
+        = image_tag('slider_featured.png', :alt => '', :class => 'green_line')
+        .image-carousel{:dataurl => "/search/carsousel_images.json"}
+          .carousel-image
+            %a.profile_link{:href => attorney_path(lawyer, slug: lawyer.slug)}
+              = image_tag default_image.photo.url(:large), :alt => ""
+          .carousel-description
+            .ratings
+              %h4= link_to "#{lawyer.full_name}", attorney_path(lawyer, slug: lawyer.slug)
+              .online_icons
+                - if lawyer.is_online
+                  %span.video.online= start_or_video_button_p(lawyer)
+                - else
+                  %span.video.offline
+                - if lawyer.is_available_by_phone?
+                  %span.voice.online= start_phone_consultation_p(lawyer)
+                - else 
+                  %span.voice.offline
+                %span.note= start_or_schedule_button_text_profile(lawyer)
+                - if lawyer.daily_hours.present?
+                  %span.text.online
+                    %a.appt-select{:href => '#'}
+                - else
+                  %span.text.offline
+                    %a.appt-select{:href => '#'}
+                .video_chat.online.tooltip Start video consultation
+                .voice_chat.online.tooltip Start phone consultation
+                .note_chat.tooltip Ask a question
+                .text_chat.offline.tooltip No appointments available
+                .text_chat.online.tooltip Schedule consultation
+                .video_chat.offline.tooltip Not available by video now
+                .voice_chat.offline.tooltip Not available by phone now
+            %p.desc= raw(description)
+            #carousel-buttons            
+              -#.free
+                %table
+                  %tbody
+                    %tr
+                      %td
+                        %p.active_action= start_or_schedule_button(lawyer)
+              %a.free{:href => "/attorneys/#{lawyer.id}/#{CGI::escape(lawyer.full_name)}"}
+                %p.rate= "#{lawyer.free_consultation_duration} minutes free"
+                %p.small="then #{number_to_currency (lawyer.rate + AppParameter.service_charge_value)}/minute"
+              .free_dropdown{:href=> "#"}  
+              .button_tooltip
+                .button-content
+                  %ul
+                    - video_callable = lawyer.is_online && !lawyer.is_busy && lawyer.phone.present?
+                    %li.shedule{:style => "display: #{video_callable ? 'list-item' : 'none'}"}
+                      = start_or_schedule_button(lawyer) # start_video_button(lawyer)
+                    - phone_callable = lawyer.is_available_by_phone?
+                    %li.phone{:style => "display: #{phone_callable ? 'list-item' : 'none'}"}
+                      = start_phone_consultation(lawyer)                      
+                    - appointment_presnt = lawyer.daily_hours.present?
+                    %li.appt{:style => "display: #{appointment_presnt ? 'list-item' : 'none'}"}
+                      %a.appt-select{:href => '#'} Schedule a consultation                      
+                    %li.text
+                      = start_or_schedule_button_text(lawyer)
+            - # content for the modal dialog we are going to display
+            %div{:style => "display:none;"}
+              = render(:partial => "/attorneys/appointment_form", :locals => {:lawyer => lawyer})
+              -#.lawyer_rates
+                %h5.rate= free_message(lawyer)
+                = content_tag :p, "then #{number_to_currency (lawyer.rate + AppParameter.service_charge_value)}/minute", class: "small"
+                %p.small
+                  %span (prorated to the minute)            
+            
+            
+            
+              -#%a.free{:href=> "#"}
+                %p.rate= "#{lawyer.free_consultation_duration} minutes free"
+                %p.small="then #{number_to_currency (lawyer.rate + AppParameter.service_charge_value)}/minute"
+              -#.button_tooltip
+                .button-content
+                  %ul
+                    - video_callable = lawyer.is_online && !lawyer.is_busy && lawyer.phone.present?
+                    %li.shedule{:style => "display: #{video_callable ? 'list-item' : 'none'}"}
+                      = start_or_schedule_button(lawyer) # start_video_button(lawyer)
+                    - phone_callable = lawyer.phone.present? 
+                    %li.phone{:style => "display: #{phone_callable ? 'list-item' : 'none'}"}
+                      = start_phone_consultation(lawyer)
+                    %li.text
+                      = start_or_schedule_button_text(lawyer)
+                        
+              - if (lawyer.yelp_business_id.present? && !!lawyer.yelp[:reviews]) || lawyer.reviews.count.to_i > 0
+                - if lawyer.yelp_business_id.present? && !!lawyer.yelp[:reviews]                      
+                  .stars
+                    = image_tag lawyer.yelp[:rating_img_url]
+                  .rev_for_js
+                    %a.yelp_reviews{:href => "/attorneys/#{lawyer.id}/#{CGI::escape(lawyer.full_name)}#reviews"} 
+                      = content_tag :span, pluralize(lawyer.yelp[:review_count], "#{image_tag('miniMapLogo.png')}" + "review").html_safe, class: "number_rev"
+                    %a.reviews{:style => 'display:none;'}
+                      %span.number_rev
+                - else
+                  .stars
+                    - if  lawyer.reviews.average(:rating).to_i !=0 
+                      = link_to_unless_current content_tag(:div, "", class: "rating", data: { score: lawyer.reviews.average(:rating).to_i }), attorney_path(lawyer, slug: lawyer.slug, anchor: "reviews"), class: "rating-stars"        
+                  .rev_for_js
+                    - if lawyer.reviews.count.to_i != 0
+                      %a.reviews{:href => "/attorneys/#{lawyer.id}/#{CGI::escape(lawyer.full_name)}#reviews"} 
+                        %span.number_rev= pluralize(lawyer.reviews.count, "review", "reviews")
+                      %a.yelp_reviews{:style => 'display:none;'}
+                        %span.number_rev
+              - else    
+                .stars
+                .rev_for_js
+                  %a.reviews{:style => "display:none;"}
+                    %span.number_rev
+                  %a.yelp_reviews{:style => 'display:none;'}
+                    %span.number_rev
+#top_content_border                    
+#bottom_content
+  .left_bar
+    %h2 How it works:
+    .feature
+      %a{:href => "/lawyers"}
+        = image_tag('feature1.png', :alt => '')  
+      .feature_description
+        -#%h3 Browse Lawyers.
+        %p 
+          1. 
+          = link_to "Browse lawyers", lawyers_path
+          or submit your question
+    .feature
+      %a{:href => "/lawyers"}
+        = image_tag('feature2.png', :alt => '')  
+      .feature_description
+        -#%h3 Consult Free Online.
+        %p 2. Talk immediately or schedule consultation
+    .feature
+      %a{:href => "/lawyers"}
+        = image_tag('feature3.png', :alt => '')
+      .feature_description
+        -#%h3 Pay for Advice or Services.
+        %p 3. Pay for services or extended consultations
+  .right_bar
+    /%h2 Introduction video
+    /= image_tag('video.png', :alt => '')  
+    .testimonials
+      %h2 Testimonials:
+      -#.avatar
+        = image_tag('ava.png', :alt => '')
+        %p Johne Dwayne
+      .testimonial_description
+        %p
+          %span.open_quotes
+          %span.desc
+            Easiest way to talk to a lawyer...
+      .testimonial_description
+        %p
+          %span.open_quotes
+          %span.desc              
+            Best way to meet clients outside my hometown...
+      .testimonial_description
+        %p
+          %span.open_quotes
+          %span.desc
+            Never stepping foot in a law office again...
+      .testimonial_description
+        %p
+          %span.open_quotes
+          %span.desc
+            Wait, this is amazing...
+      .testimonial_description
+        %p
+          %span.open_quotes
+          %span.desc
+            Virtual lawyering gone mainstream...        
+      -#.testimonial_description
+        %p
+          %span.open_quotes
+          %span.desc 
+            Honestly, I wouldn’t have used a lawyer at all were it not for how easy talking to lawyer seems on Lawdingo.
+          /%span.close_quotes{:style => 'margin-left: 285px;'}
+        %p.signature - Josh Leong, San Francisco
+        
+      -#.testimonial_description
+        %p
+          %span.open_quotes
+          %span.desc 
+            For about $100, I got the advice I needed to proceed confidently from a top-quality lawyer without needing to talk to a receptionist, go to an office, or frankly, reveal too much about myself. Highly recommended.
+          /%span.close_quotes{:style => 'margin-left: 203px;'}
+        %p.signature - S.Y., Massachuesetts
+        
+      -#.testimonial_description
+        %p
+          %span.open_quotes
+          %span.desc 
+            Solo practitioners are always looking for cost-effective ways of bringing in new clients, and Lawdingo is great for that! It's been easy and seamless to add it to my practice. Best of all - it works! I have had paying clients from Lawdingo and I haven't had to expend a lot of time, effort, or money to get them.
+          /%span.close_quotes{:style => 'margin-left: 320px;'}
+        %p.signature - Deepa Menon, Attorney    
+          
+:javascript
+  $ (".rating").raty({
+      path: "/assets/raty",
+      hintList: ['', '', '', '', '', ''],
+      readOnly: true,
+      start: function() {return $(this).data("score")}
+  })

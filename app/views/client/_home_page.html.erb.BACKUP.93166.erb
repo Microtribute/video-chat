@@ -1,0 +1,42 @@
+<%
+#detail    = user.detail
+tab       = (tab == User::PAYMENT_TAB or tab == User::SESSION_TAB) ? tab : User::ACCOUNT_TAB
+txt_color = ['black','blue']
+%>
+<h3 class="lawyer_notice">You are now shown as available by video chat. Keep this window open to remain available.</h3>
+=======
+<% if current_user.is_lawyer? %>
+  <h3 class="lawyer_notice">You are now shown as available by video chat. Keep this window open to remain available.</h3>
+<% end %>
+>>>>>>> 33715979a07c8fc5913f392cfaa859f44d5d7314
+=======
+<h3 class="lawyer_notice">You are now shown as available by video chat. Keep this window open to remain available.</h3>
+>>>>>>> a53d678... changed url of text question links
+<div>
+  <div style="font-size:14px;margin-right:8px;margin-bottom:10px;font-weight:bold;">
+      <%= link_to "Account information", user_path(user, :t =>User::ACCOUNT_TAB), :style =>"color:#{txt_color[ tab == 'f' ? 0 : 1]};text-decoration:none;" %> |
+      <%= link_to "Payment info", user_path(user, :t =>User::PAYMENT_TAB), :style =>"color:#{txt_color[ tab == 'm' ? 0 : 1]};text-decoration:none;" %> |
+      <%= link_to "Summary of sessions", user_path(user, :t =>User::SESSION_TAB), :style =>"color:#{txt_color[ tab == 'l' ? 0 : 1]};text-decoration:none;" %>
+  </div>
+
+  <% if tab == User::ACCOUNT_TAB %>
+    <%= render :partial =>"/users/account_info", :locals => {:user => user} %>
+  <% elsif tab == User::PAYMENT_TAB %>
+    <%= render :partial =>"/client/payment_info" %>
+  <% elsif tab == User::SESSION_TAB %>
+    <%= render :template =>"/conversations/index" %>
+  <% end %>
+
+<% if false %>
+  <div style="width: 30%;margin-right: 10px;margin-top: 20px;float: left;">
+    <div class="header_mb">
+      Conversations
+    </div>
+    <div class="desc">
+      <%= link_to "All Conversations", conversations_path %><br/>
+      Recent Conversations<hr/>
+    </div>
+  </div>
+<% end %>
+</div>
+

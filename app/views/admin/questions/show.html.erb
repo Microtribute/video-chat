@@ -1,0 +1,21 @@
+<div class="questions-wrapper">
+  <h1>Question #<%= @question.id %></h1>
+  <p>by <%= @question.user.full_name %> (<%= mail_to @question.user.email %>)</p>
+
+  <%= simple_form_for @question, remote: true do |f| %>
+    <%= f.input :id, as: :hidden %>
+    <%= f.input :state_name, as: :select, collection: State.all.map(&:name), include_blank: "Not specified" %>
+    <%= f.input :practice_area, as: :select, collection: PracticeArea.where(parent_id: nil).map(&:name), include_blank: "Not specified" %>
+    <%= f.input :body, label: "Inquiry" %>
+    <div class="actions">
+      <%= f.submit "Save changes", class: "button" %>
+      <span class="status"></span>
+    </div>
+  <% end %>
+
+  <div id="send_to_lawyers">
+    <p>Send to <span id="matched_lawyers_count"><%= pluralize(matched_lawyers_count(@question), "lawyer") %></span>.</p>
+    <%= button_tag "Send free inquiry", class: "button", name: "send_inquiry", data: { free: true } %>
+    <%= button_tag "Send auction inquiry", class: "button", name: "send_inquiry", data: { free: false } %>
+  </div>
+</div>

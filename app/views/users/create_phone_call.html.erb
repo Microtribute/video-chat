@@ -1,0 +1,148 @@
+<div class="call-container">
+  <div id="dialing_div" class="details">
+    <%= image_tag(@lawyer.photo.url(:thumb), class: "userpic") %>
+    <div class="info">
+      <h2><%= @lawyer.full_name %></h2>
+      <p>Connecting...</p>
+      <p>You'll get a call in a minute.</p>
+      <p>The first <%= @lawyer.free_consultation_duration %> minutes of the call will be free. </p>
+      <p>Thereafter, you'll be billed at <%= number_to_currency @lawyer.rate + AppParameter.service_charge_value %>/min.</p>
+      <input type='button' value="End call" onclick="hangupCall('<%= 0 %>');return false;" class="button gray" />
+    </div>
+  </div>
+
+  <div id="connected_free_time_div" class="details" style="display:none;">
+    <%= image_tag(@lawyer.photo.url(:thumb), class: "userpic") %>
+    <div class="info">
+      <h2><%= @lawyer.full_name %></h2>
+      <p id="call_status_span" class="strong">Call connected</p>
+      <p id="count_up_timer">Total Time: <span id="count_up_time_span">0:00</span></p>
+      <p id="free_text_span">Free time remaining: <span id="time_span">5:00</span>.</p>
+      <p>Rate: <%= number_to_currency @lawyer.rate + AppParameter.service_charge_value %>/min.</p>
+      <p>Billed time: <span id="billed_time_span">0 minutes</span>.</p>
+      <input type='button' value="End call" onclick="hangupCall('<% @call.sid %>');return false;" class="button gray" />
+    </div>
+  </div>
+  <% if current_user.stripe_customer_token.present?
+      style = "width:300px;float:left;display:none"
+     else
+      style = "width:300px;float:left;"
+     end
+  %>
+  <div id="payment_div" style="<%= style %>">
+    <div>
+      <div class="error_explanation">
+        <ul class="errors">
+          <li> <div id="stripe_errors" class ="stripe_error"></div></li>
+          <% if @msg %>
+            <li> <div class ="stripe_error"><%= @msg %></div></li>
+          <% end %>
+        </ul>
+      </div>
+      <%= form_tag("/updatePaymentInfo", :id => 'payment-form', :remote =>true) do %>
+
+        <%= hidden_field_tag :form_type, "ajax" %>
+        <%= hidden_field_tag :stripe_card_token %>
+        <%= hidden_field_tag :attorney_id, @lawyer.id %>
+        <h3 class="paid_model_header">To talk longer than <%= @lawyer.free_consultation_duration %> minutes, you will need to have payment information on file, or else the call will end.</h3>
+          <fieldset class="personal-info">
+              <%= image_tag("creditcards.png") %>
+              <div class="label">Credit card number:</div>
+              <input type="text" name="card_number" autocomplete="off" placeholder="Credit card number" maxlength="26" size="26" id="card_detail_card_number"></input>
+              <div class="label">Expires On <span class="right">CCV Code:</span></div>
+              <%= select_month nil, {add_month_numbers: true}, {name: "card_detail[expire_month]", id: "card_month"} %>
+  <%= select_year nil, {start_year: Date.today.year, end_year: Date.today.year+15}, {name: "card_detail[expire_year]", id: "card_year"} %>
+              <input id="card_detail_card_verification" type="password" size="9" autocomplete="off" name="scode" maxlength="4"></input>
+              <div src="question.png" class="help-text" tooltip="The three or four digit code on the back of your card."></div>
+              <button type="submit" class="button blue">Submit</button>
+              <div class="sealed" style="margin: 10px 0 0 10px;"><%= render "godaddy_seal" %></div>
+          </fieldset>
+          <div class="clear"></div>
+          <div >
+            <noscript>JavaScript is not enabled and is required for this form. First enable it in your web browser settings.
+            </noscript>
+          </div>
+          
+      </form>
+    </div>
+</div>
+<% end %>
+  </div>
+</div>
+
+
+<%= javascript_tag do %>
+  var callStatusTimer = $.timer(function() {
+      $.ajax({
+        url: "/CheckCallStatus",
+        type:'post',
+        data:{call_id: '<%= @call.sid %>'},
+        success: function(response){
+          }
+      });
+    });
+  count = '<%= 60*@lawyer.free_consultation_duration %>';
+  var freeCallTimer = $.timer(function() {
+    --count;
+    if(count <= 0)
+    {
+      freeCallTimer.pause();
+      $.ajax({
+        url: "/UpdateCallStatus",
+        type:'post',
+        data:{call_id: '<%= @call.sid %>', sb:'1'},
+        success: function(response){
+          }
+      });
+    }
+    else
+    {
+      seconds = count%60;
+      seconds_string = (seconds.toString().length >1) ? seconds.toString() : '0' + seconds.toString();
+      minutes = parseInt(count/60);
+      timeString = minutes.toString() + ':' + seconds_string;
+      $('#time_span').html(timeString);
+    }
+  });
+
+    billingCounter = 0;
+    var billingCallTimer = $.timer(function() {
+      ++billingCounter;
+      seconds = billingCounter%60;
+      minutes = parseInt(billingCounter/60);
+      minutes = (seconds == 0) ? minutes : minutes+1;
+      timeString = minutes.toString() + " minute(s)";
+      $('#billed_time_span').html(timeString);
+    });
+
+    incrementCounter = 0;
+    var countUpTimer = $.timer(function() {
+      ++incrementCounter;
+      seconds = incrementCounter%60;
+      minutes = parseInt(incrementCounter/60);
+      minutesString = (minutes.toString().length > 1) ? minutes.toString() : '0'+minutes.toString();
+      secondsString = (seconds.toString().length > 1) ? seconds.toString() : '0'+seconds.toString();
+      timeString = minutesString + ":" + secondsString;
+      $('#count_up_time_span').html(timeString);
+    });
+
+  $(document).ready(function(){
+        //$('#connected_free_time_div').hide();
+        callStatusTimer.set({ time : 1000, autostart : true });
+        freeCallTimer.set({ time : 1000, autostart : false });
+        countUpTimer.set({ time : 1000, autostart : false });
+        billingCallTimer.set({ time : 1000, autostart : false });
+      });
+
+  function hangupCall(call_sid)
+  {
+    $.ajax({
+        url: "/twilio/endcall",
+        type:'get',
+        data:{call_id: '<%= @call.sid %>'},
+        success: function(response){
+        }
+    });
+  }
+<% end %>
+

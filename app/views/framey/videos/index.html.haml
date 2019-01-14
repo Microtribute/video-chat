@@ -1,0 +1,29 @@
+- if current_user.is_lawyer? && current_user.is_online
+  %h3.lawyer_notice You are now shown as available by video chat. Keep this window open to remain available.
+#page.framey-video
+  %div
+    .profile
+      = render partial: "lawyer/menu", locals: { lawyer: current_user }
+      .profile-block.same_height
+        %h2 Introduce yourself to prospective clients in a video of up to two minutes long.
+        - unless @lawyer.has_video?
+          .recorder-wrapper
+            %input#FrameyRecorder{"data-params" => "{ api_key: '#{Framey::API_KEY}', max_time: '120'}", :type => "video"}/
+          %p Remember to click “Publish” when you’re done recording.
+        - else
+          .player-wrapper
+            = render_player({                              |
+                video_url: @video.flv_url,                 |
+                thumbnail_url: @video.large_thumbnail_url, |
+              })                                           |
+            .controls
+              = link_to "Re-record", @video, method: :delete, confirm: "Are you sure?", class: "button gray"
+              %span.notice Current video will be deleted.
+= javascript_tag do
+  \// Id of framey input[type="video"]
+  var recorderId = "FrameyRecorder";
+
+  \// Set user id as a creator_id
+  Framey.observe(recorderId, "recordClicked", function(data) {
+  Framey.getRecorder(recorderId).setAllSessionData({"creator_id": #{current_user.id.to_s if current_user.present?}});
+  });

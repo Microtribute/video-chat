@@ -1,0 +1,24 @@
+<div style="font-size:1.5em;">
+List of Clients <span style="float: right;"> <%= link_to 'Add New Client', new_admin_client_path %> </span> <hr/>
+
+<table>
+  <thead>
+    <tr>
+      <td>Name</td> <td>Email</td><td></td>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each{|user|  %>
+      <tr>
+        <td> <%= link_to user.full_name, user_path(user), :target =>'_blank' %> </td>
+        <td> <%= user.email %> </td>
+        <td>
+          <%= link_to "Edit Account", edit_user_path(user.id) %> &nbsp;&nbsp;|
+          <%= link_to "Remove Account", admin_client_path(user), :method =>:delete, :confirm =>"Are you sure?" %>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+</div>
+

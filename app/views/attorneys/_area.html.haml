@@ -1,0 +1,7 @@
+%p
+  %a{:href => "/lawyers/Legal-Advice/All-States/#{area.name_for_url}"}= area.name
+- if area.specialities.any?
+  %ul
+    - lawyer.practice_areas.child_practice_areas.where(parent_id: area.id).order("name").each do |spec|
+      %li
+        %a{:href => "/lawyers/Legal-Advice/All-States/#{spec.name_for_url}"}= spec.name

@@ -1,0 +1,205 @@
+.profile
+  
+  .left_menu.same_height
+    - act = action_name.to_sym
+    - contr = controller_name.to_sym
+
+    %h2= link_to_unless_current "Profile info", user_path(@user, :t => User::ACCOUNT_TAB)
+    %ul
+      %li.acc_info
+        %span= link_to "Account information", user_path(@user, :t => User::ACCOUNT_TAB), :class => (act == :show && contr == :users) ? 'active' : ''
+      %li.price_offers
+        %span= link_to "Fixed-price offers", user_offerings_path(@user) 
+      %li.availability
+        %span= link_to "Set availability", user_daily_hours_path(@user) 
+      %li.video
+        %span= link_to "Intro video", framey_videos_path
+      %li.view_profile
+        %span= link_to "View your profile", attorney_path(@user, slug: @user.slug), :target => 'blank'
+    %h2= link_to_unless_current "Summary of sessions", user_path(@user, :t => User::SESSION_TAB)          
+
+  .profile-block.same_height
+    = raw flash[:error]
+    - errors = @user.errors
+    = form_for @user, :url =>@user.new_record? ? users_path : user_path(@user, :t => User::ACCOUNT_TAB), :html=>{:multipart => true} do |f|
+      - unless flash[:error]
+        - if errors.size > 0
+          .error_explanation
+            %h4.error Please fix the following errors:
+            %ul.errors
+              - errors.full_messages.each do |error|
+                %li= error
+      -# Time zone	 
+      .availability
+        .by_video
+          = f.check_box :is_online, :class => :iphoned
+          %label{:for => :is_online} Available by video:
+          .clear
+        .by_phone
+          = check_box_tag :is_available_by_phone, 1, @user.is_available_by_phone, :class => :iphoned
+          %label{:for => :is_online} Available by phone:
+          .clear
+      %br
+      %h2 Your Information
+      %table
+        %tbody
+          %tr
+            %td
+              %label First Name:
+            %td
+              = f.text_field :first_name ,{:class=>"name"}
+          %tr
+            %td
+              %label Last name:
+            %td
+              = f.text_field :last_name ,{:class=>"name"}
+          %tr
+            %td
+              %label Email:
+            %td
+              = f.text_field :email,{:class=>"email", title: "Your email address.", rel: "twipsy"}
+          %tr
+            %td
+              %label Password:
+            %td
+              = f.password_field :password ,{:class=>"passw"}
+      %hr/
+      - if current_user.is_admin?
+        = select_tag "lawyer[school_id]", options_from_collection_for_select(School.all, "id", "name", @user.school_id), prompt: "Law school"
+        %br/
+        = f.text_field :undergraduate_school, placeholder: "Undergrad school"
+        %br/
+        = f.text_field :license_year, placeholder: "Year licensed"
+        %br/
+        = f.text_field :yelp_business_id, placeholder: "Busuniess ID on Yelp"
+      - if @user.is_lawyer?
+        - pas = @user.practice_areas
+        - ppas = @user.practice_areas.parent_practice_areas
+        - pas_text = "<h2>Practice Areas: </h2>"
+        - ppas.each{|pa|
+        - pas_text += "<li>#{pa.name}"
+        - sps = pa.specialities
+        - sps_text = ""
+        - sps.each{|sp|
+        - sps_text += pas.include?(sp)? "#{sp.name}, ": ""
+        - }
+        - sps_text.chomp!(', ')
+        - pas_text += (sps_text != '')? "(#{sps_text})</li>": "</li>"
+        - }
+        - pas_text.chomp!(", ")
+        = bar_memberships_listing @user
+        .clear
+        #div_practice_areas{:style => "font-size:1em;"}
+          %ul.tick= raw(pas_text)
+        %a#practice_areas_editor.dialog-opener{:href => "#practices"} Edit
+        .clear
+        %hr/
+        %table
+          %tbody
+            %tr
+              %td
+                %label Free:
+              %td
+                = f.select(:free_consultation_duration, [ |
+                    ["Free consultation duration", ""],   |
+                    ["2 minutes", "2"],                   |
+                    ["5 minutes", "5"],                   |
+                    ["10 minutes", "10"],                 |
+                    ["15 minutes", "15"],                 |
+                    ["20 minutes", "20"],                 |
+                    ["30 minutes", "30"],                 |
+                    ["45 minutes", "45"],                 |
+                    ["60 minutes", "60"],                 |
+                    ["90 minutes", "90"]                  |
+                  ])                                      |
+                %span.rate_hint free consultation offered
+            - @user.rate = nil if @user.new_record?
+            - @user.rate = number_with_precision @user.rate, :precision => 2
+            %tr
+              %td 
+                %label Price:
+              %td
+                = f.text_field :rate ,{:class=>"paypal"}
+                %span.rate_hint per minute rate
+            %tr
+              %td 
+                %label Phone:
+              %td
+                = f.text_field :phone ,{}
+
+            %tr
+              %td
+                %label Time:
+              %td
+                = f.time_zone_select( :time_zone, ActiveSupport::TimeZone.us_zones, :default => "Pacific Time (US & Canada)")
+                = hidden_field_tag :user_type, @user[:user_type]    
+            %tr
+              %td 
+                %label Paypal email:
+              %td
+                = f.text_field :payment_email ,{:class=>"paypal"}
+            %tr
+              %td 
+                %label Message:
+              %td
+                = f.text_area :personal_tagline ,{:class=>"summary",:maxlength => 2000, :rows=>2}
+        %div{:style => "font-size:14px;"} Upload a photo
+        = f.file_field :photo
+        .clear
+        / div class="f_label"></div><span style="font-size:12px;">to receive payments from Lawdingo</span><br/
+        - i = 0
+        #dialog-overlay
+        #bar_membership.dialog-window
+          %h3 Select your bar membership(s)
+          %div
+            %ul#leveled_list_bar_ids.leveled-list
+              - j = 0
+              = f.fields_for :bar_memberships do |bar_membership_fields|
+                - if bar_membership_fields.object.new_record?
+                  %li{:id => i}
+                    = check_box_tag("states_#{i}", @states[i].id, false, :id => "state_#{i}", :onchange =>"javascript:select_unselect_state('#{i}');")
+                    = @states[i].name
+                    = bar_membership_fields.hidden_field :state_id
+                    .sub{:id => @states[i].name}
+                      = "#{@states[i].abbreviation} Bar ID:"
+                      = bar_membership_fields.text_field :bar_id
+                  - i += 1
+                - else
+                  %li{:id => i + j}
+                    = check_box_tag("states_#{i + j}", @filled_states[j].id, true, :id => "state_#{i+j}", :onchange =>"javascript:select_unselect_state('#{i+j}');")
+                    = @filled_states[j].name
+                    = #bar_membership_fields.hidden_field :state_id
+                    .sub{:id => @filled_states[j].name}
+                      = "#{@filled_states[j].abbreviation} Bar ID:"
+                      = bar_membership_fields.text_field :bar_id
+                  - j += 1
+          %a.button.blue{:onclick => "setBarIds();", :style => 'float: left;'} Done
+        #practices.dialog-window
+          %h3 Edit Practice Area(s)
+          %div
+            %ul#leveled-list_practice_areas.leveled-list
+              - l_pas = @user.practice_areas
+              - PracticeArea.parent_practice_areas.each do |p|
+                %li
+                  - if l_pas.include?(p)
+                    %input.parent-area{:checked => "", "data-id" => p.id, "data-name" => p.name, :id => p.name, :name => "practice_areas[]", :type => "checkbox", :value => p.id}/
+                    = p.name
+                  - else
+                    %input.parent-area{"data-id" => p.id, "data-name" => p.name, :id => p.name, :name => "practice_areas[]", :type => "checkbox", :value => p.id}/
+                    = p.name
+                  .sub
+                    = p.name
+                    specialities:
+                    %ul
+                      - p.specialities.each do |s|
+                        - if l_pas.include?(s)
+                          %li
+                            %input{:checked => "", "data-name" => "#{raw(s.name)}", "data-parent-id" => p.id, :id => s.name, :name => "practice_areas[]", :type => "checkbox", :value => s.id}/
+                            = s.name
+                        - else
+                          %li
+                            %input{"data-name" => s.name, "data-parent-id" => p.id, :id => s.name, :name => "practice_areas[]", :type => "checkbox", :value => s.id}/
+                            = s.name
+          %a.button.blue{:onclick => "setPracticeAreas();", :style => 'float:left;'} Done
+          .dialog-close
+      = f.submit @user.is_lawyer? ? (@user.new_record? ? 'Apply as Lawyer' : 'Update Account') : (@user.new_record? ? 'Join Lawdingo' : 'Update Account')  ,:class=>"button"

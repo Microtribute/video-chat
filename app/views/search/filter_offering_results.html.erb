@@ -1,0 +1,21 @@
+<div class="question-container">
+  <%= render partial: "questions/form", locals: { type: "offering" } %>
+</div>
+
+<% if @offerings.blank? %>
+  <div class="selected-lawyers-caption">
+    <%= selected_offerings_caption %>
+  </div>
+<% else %>
+  <div class="selected-lawyers-caption">
+    <%= selected_offerings_caption %>
+  </div>
+
+  <% @offerings.each do |offering| %>
+    <%= render partial: "offerings/offering", locals: { lawyer: Lawyer.find(offering.user.id), offering: offering } %>
+  <% end %>
+<% end %>
+
+<script>
+$('.dialog-opener').dialog();
+</script>

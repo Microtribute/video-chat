@@ -1,0 +1,31 @@
+<% if @service_type == "legal-services" %>
+  $("#service_type .service .count").html("<%= escape_javascript(@search.total.to_s) %>")
+
+  <% if @offerings.first_page? -%>
+    $("div.results").html("<%= escape_javascript(render(:partial => "search_results")) %>")
+  <% else -%>
+    <% # remove the load-more link %>
+    $("div.load-more").remove()
+    $("div.results").append("<%= escape_javascript(render(:partial => 'search_results')) %>")
+  <% end -%>
+
+<% else %>
+
+  $("#service_type .advice .count").html("<%= escape_javascript(@search.total.to_s) %>")
+
+  <% if @lawyers.first_page? -%>
+    $("div.results").html("<%= escape_javascript(render(:partial => "search_results")) %>")
+  <% else -%>
+    <% # remove the load-more link %>
+    $("div.load-more").remove()
+    $("div.results").append("<%= escape_javascript(render(:partial => 'search_results')) %>")
+  <% end -%>
+
+  // Render the lawyer request form if no lawyer found
+  <% unless @lawyers.count > 0 %>
+    $("div#no_lawyer_found").remove();
+    $("div.main_content").append("<%= j(render partial: "no_lawyer_found") %>");
+  <% end  %>
+<% end %>
+
+

@@ -1,0 +1,33 @@
+
+<% errors = @user.errors %>
+<%= form_for @user, :url =>admin_clients_path do |f| %>
+  <% if @user.errors.size > 0 %>
+    <div style="border: 1px solid red;padding: 5px;margin: 10px 10px 20px 100px;width: 500px;">
+      The following errors prevented from creating account <br/>
+      <ul>
+        <% errors.full_messages.each{|error| %>
+          <li><%= error %></li>
+        <% } %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= f.hidden_field :user_type, :value =>@user[:user_type] %>
+
+  <div class="f_label"> First Name : </div>
+  <%= f.text_field :first_name %> <br/>
+  <div class="f_label"> Last Name : </div>
+  <%= f.text_field :last_name %> <br/>
+
+  <div class="f_label">Email:</div>
+  <%= f.text_field :email %><br/>
+
+  <div class="f_label">Password:</div>
+  <%= f.password_field :password %><br/>
+
+  <div style="margin: 10px 10px 10px 270px;">
+    <%= f.submit @user.new_record? ? 'Create Client Account' : 'Update Client Account' %>
+    &nbsp; &nbsp; or &nbsp; <%= link_to "Cancel", root_path %>
+  </div>
+<% end %>
+

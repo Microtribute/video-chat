@@ -1,0 +1,12 @@
+<% unless @practice_area_specialities.blank? %>
+  <li class="practice_area selected" data-id="0">
+    <%= radio_button_tag "general", "0", class: "selected" %>
+    <label for="general_0">General <%= @practice_area.name %></label>
+  </li>
+  <% @practice_area_specialities.each do |spec| %>
+    <%= content_tag_for :li, spec, data: { id: spec.id } do %>
+      <%= radio_button_tag "area-#{spec.id}", "#{spec.id}", false, id: "area_#{spec.id.to_i}" %> 
+      <%= label_tag "area_#{spec.id}", "#{spec.name}" %>
+    <% end %>
+  <% end %>
+<% end %>

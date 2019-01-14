@@ -1,0 +1,42 @@
+#page.apply-form-wrapper
+  %h1.form-header
+    Apply for an Attorney Account
+  %div
+    .process-wrapper
+      .process-header
+        .process-bar
+        .first-step.steps.active
+          1
+        .second-step.steps
+          2
+        .third-step.steps
+          3
+        .clear
+        %p.first-notice.notices Create Account
+        %p.second-notice.notices Activate Subcription
+        %p.third-notice.notices Complete Profile
+      .apply-form
+        = render 'users/form'
+    .right-wrapper
+      .right-block
+        %h3 Testimonials
+        %p At vero eos et accusam et justo duo lorem dolores et ea rebum. Stet clita kasd gubergren, no sea takimatare sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor.
+        .buttons
+          %a.left_arrow_button{:href => '#'}
+          %a.right_arrow_button{:href => '#'}
+        .clear
+      .right-block
+        %h3 Attorney Benefits
+        %ul
+          %li Lawdingo is the premier marketplace
+          %li Telephone or text for legal consultations
+          %li Lawdingo has legal representation
+          %li Our lawyers offers free consultations
+      .contact_outer
+        %p 
+          Questions? contact us at 
+          %a{:href => 'mailto:info@lawdingo.com'} info@lawd-
+          %br/
+          ingo.com 
+          or 415-234-DINGO (3464).
+      

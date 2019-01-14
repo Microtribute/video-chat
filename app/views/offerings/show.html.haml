@@ -1,0 +1,5 @@
+- title "#{@offering.name} — Service offered by #{@offering.user.full_name} on Lawdingo"
+#inline-wrapper
+  .main_content
+    #results.results
+      = render partial: "offerings/offering", locals: { lawyer: Lawyer.find(@offering.user.id), offering: @offering }

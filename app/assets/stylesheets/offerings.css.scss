@@ -1,0 +1,156 @@
+@mixin inline-block {
+  display: -moz-inline-box;
+  -moz-box-orient: vertical;
+  display: inline-block;
+  vertical-align: baseline;
+  zoom: 1;
+  *display: inline;
+  *vertical-align: auto;
+}
+
+div.offering {
+  p {
+    color: black;
+    font-size: 0.9em;
+    margin: 0;
+    line-height: 1.5;
+
+    &.description {
+      font-style: italic;
+    }
+  }
+
+  .action-buttons {
+    margin-top: 0.25em;
+  }
+}
+
+body.offerings {
+  h3 {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0 0 0.5em 0;
+    line-height: 1;
+
+    &>small {
+      font-size: 12px;
+      display: inline-block;
+      font-weight: normal;
+    }
+  }
+
+  .offerings > div:first-child {
+    padding: 30px 60px;
+    font-size: 1.4em;
+    min-height: 350px;
+  }
+
+  .offerings {
+    position: relative;
+    zoom: 1;
+
+    li.offering {
+      font-weight: bold;
+    }
+  }
+
+  #offerings, #new_offering {
+    @include inline-block;
+    vertical-align: top;
+    width: 48%;
+  }
+
+  div#new_offering {
+    overflow: hidden;
+    border-left: 2px solid #888;
+    padding: 5px 5px 5px 1.4em;
+  }
+
+  input#offering_fee {
+    width: 60px; 
+  }
+
+  .simple_form {
+    .input {
+      position: relative;
+      min-width: 400px;
+
+      &.string input,
+      &.currency input,
+      &.text textarea {
+        width: 300px;
+        font-family: arial, verdana, tahoma;
+        border: 1px solid #B8B8B8;
+        border-radius: 4px;
+        -moz-border-radius: 4px;
+        -webkit-border-radius: 4px;
+        font-size: 0.833em;
+        padding: 8px;
+      }
+
+      &.text {
+        width: 400px;
+      }
+
+      .hint {
+        display: inline-block;
+        width: 100%;
+        font-size: 12px;
+      }
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      word-spacing: nowrap;
+    }
+
+    .input {
+      margin-bottom: 1em;
+    }
+
+    textarea#offering_description {
+      height: 60px;
+    }
+  }
+}
+
+ul.offerings-list {
+  li {
+    display: block;
+    position: relative;
+    margin: 0 0 0.75em 0; 
+    width: 100%;
+    padding: 4px;
+
+    &.selected {
+      a {
+        color: #222 !important;
+      }
+    }
+
+    .controls {
+      display: inline;
+      font-size: 0.75em;
+      a {
+        border-bottom:0;
+        color: #222;
+        background-color: #F7EEC6;
+        padding: 1px 3px;
+        border-radius: 3px;
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+body.offerings.index #container .offerings#page .profile{
+  .profile-block.same_height{
+    padding-top:0;
+    padding-left:0;
+  }
+}
+
+body.offerings.index .lawyer_notice{
+  padding-top:19px;
+}

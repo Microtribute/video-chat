@@ -1,0 +1,55 @@
+<!-- CONTENT -->
+<%= javascript_include_tag "https://js.stripe.com/v1/", "payment" %>
+<div id="page" class="payment">
+    <span class="pre-clause">To speak to an attorney you must first...</span>
+    <h1>Enter payment information</h1>
+    <div>
+      <div class="error_explanation">
+
+        <ul class="errors">
+          <li> <div id="stripe_errors"></div></li>
+        </ul>
+      </div>
+      <%= form_for @card_detail, :url => {:action => 'payment_info'}, :html => {:id => 'payment-form'}  do |f| %>
+        <%= hidden_field_tag :stripe_card_token %>
+          <fieldset class="personal-info">
+              <%= f.text_field :first_name ,{:placeholder=>"First Name"} %>
+              <%= f.text_field :last_name ,{:placeholder=>"Last Name"} %>
+              <%= f.text_field :street_address ,{:placeholder=>"Street Address"} %>
+              <%#= f.text_field :apt_suite_bldg ,{:placeholder=>"Apt, Suite, Bldg (Optional)"} %>
+              <%= f.text_field :city ,{:placeholder=>"City"} %>
+              <%= f.text_field :state ,{:placeholder=>"State"} %>
+              <%= f.text_field :postal_code ,{:placeholder=>"Postal Code"} %>
+              <div class="clear"></div>
+              <select id="card_detail_country" name="card_detail[country]">
+               <option>United States</option>
+               <option>United Kingdom</option>
+              </select>
+          </fieldset>
+          <fieldset class="card-info">
+              <%= image_tag("creditcards.png") %>
+              <label for="card_type">Card Type</label>
+              <%= f.select :card_type, [["Visa", "visa"], ["MasterCard", "master"], ["Discover", "discover"], ["American Express", "american_express"]] %>
+              <%= f.text_field :card_number ,{:placeholder=>"Credit Card Number"} %>
+              <div class="label">Expires On</div>
+              <%= select_month nil, {add_month_numbers: true}, {name: "card_detail[expire_month]", id: "card_month"} %>
+  <%= select_year nil, {start_year: Date.today.year, end_year: Date.today.year+15}, {name: "card_detail[expire_year]", id: "card_year"} %>
+              <%= f.text_field :card_verification ,{:placeholder=>"Security Code", :maxlength => 4} %>
+              <div src="question.png" class="help-text" tooltip="The three or four digit code on the back of your card."></div>
+          </fieldset>
+          <div class="clear"></div>
+          <div >
+            <noscript>JavaScript is not enabled and is required for this form. First enable it in your web browser settings.
+            </noscript>
+          </div>
+          <button type="submit" class="button blue">Continue</button><span class="label">Your card will not be charged</span>
+          <div class="sealed" style="margin: 10px 0;">
+            <%= render "godaddy_seal" %>
+          </div>
+      </form>
+    </div>
+    <span class="post-clause"><%= link_to 'Skip payment info for now', users_path %> (You just won't be able to initiate a legal session)</span>
+</div>
+<% end %>
+     <!-- END CONTENT -->
+

@@ -1,0 +1,74 @@
+
+<% errors = @user.errors %>
+<%= form_for @user, :url =>admin_lawyers_path do |f| %>
+  <% if @user.errors.size > 0 %>
+    <div class="error_explanation">
+      The following errors prevented from creating account <br/>
+      <ul>
+        <% errors.full_messages.each{|error| %>
+          <li><%= error %></li>
+        <% } %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= f.hidden_field :user_type, :value =>@user[:user_type] %>
+
+  <div class="f_label"> First Name : </div>
+  <%= f.text_field :first_name %> <br/>
+  <div class="f_label"> Last Name : </div>
+  <%= f.text_field :last_name %> <br/>
+
+  <div class="f_label">Email:</div>
+  <%= f.text_field :email %><br/>
+
+  <div class="f_label">Password:</div>
+  <%= f.password_field :password %><br/>
+
+  <div class="f_label">Personal Tagline:</div>
+  <%= f.text_field :personal_tagline %><br/>
+
+  <div class="f_label">Photo: </div>
+  <%= f.file_field :photo %> <br/>
+
+  <div class="f_label">Bar Memberships:</div>
+  <%= f.text_area :bar_memberships, :size =>'50x3' %><br/>
+
+  <div class="f_label">Bar ID(s):</div>
+  <%= f.text_field :bar_ids %> <br/>
+
+  <div class="f_label">Practice Areas: </div>
+  <%= f.text_area :practice_areas, :size =>'50x3' %><br/>
+
+  <div class="f_label">Per-minute Rate:</div>
+  $<%= f.text_field :rate %>/minute<br/>
+
+  <div class="f_label">Practice Areas: </div>
+  <%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.us_zones %><br/>
+
+  <div class="f_label">Phone number:</div>
+  <%= f.text_field :phone %><span class="rate_hint">Complete number including country codes</span><br/>
+
+  <div class="f_label"></div><span style="font-size:12px;">note that Lawdingo charges a /minute fee on top of this to clients</span><br/>
+
+  <div class="f_label">Pay-pal Email:</div>
+  <%= f.text_field :payment_email %><br/>
+
+  <div class="f_label"></div><span style="font-size:12px;">to receive payments from Lawdingo</span><br/>
+  <div style="margin: 10px 10px 10px 270px;">
+    <%= f.submit @user.new_record? ? 'Create new Attorney Account' : 'Update Attorney Account' %>
+    &nbsp; &nbsp; or &nbsp; <%= link_to "Cancel", root_path %>
+  </div>
+
+<% end %>
+<style type="text/css">
+  div.f_label{
+    height: 15px;
+    width: 250px;
+    padding: 2px;
+    float:left;
+    text-align: right;
+    margin-right: 15px;
+  }
+</style>
+

@@ -1,0 +1,17 @@
+<div class="questions-wrapper">
+  <h1>Clients questions</h1>
+
+  <ul class="questions">
+    <% @questions.each do |question| %>
+      <% if question.body.present? %>
+        <%= content_tag_for :li, question do %>
+          <%= link_to admin_question_path(question), class: "block-link" do %>
+            <span class="id"><%= "##{question.id}" %></span>
+            <span class="date"><%= question.created_at.strftime("%d.%m.%Y") %></span>
+            <%= simple_format truncate(question.body, length: 100) %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </ul>
+</div>

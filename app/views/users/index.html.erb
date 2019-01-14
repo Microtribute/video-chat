@@ -1,0 +1,21 @@
+<div id="page" class="session-summary">
+<% if logged_in? %>
+  <%
+  rfile = nil
+  case current_user.user_type
+  when User::CLIENT_TYPE
+    rfile = "/client/home_page"
+  when User::LAWYER_TYPE
+    rfile = "/lawyer/home_page"
+  when User::ADMIN_TYPE
+    rfile = "/admin/home_page"
+  end
+%>
+<% if rfile %>
+  <%= render :partial =>rfile, :locals =>{:user =>current_user, :tab =>@tab} %>
+<% end %>
+<% else %>
+  <%= render :template =>'/sessions/new' %>
+<% end %>
+</div>
+

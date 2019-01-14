@@ -1,0 +1,6 @@
+<div id="no_lawyer_found">
+  <p>Sorry we don't currently have any such lawyers!</p>
+  <p>Please tell us what kind of lawyer you were looking for, and we'll try to get some on board.</p>
+  <%= text_area_tag :lawyer_request_body %>
+  <%= button_tag "Send", class: "button", id: "submit_lawyer_request", disable_with: "Please wait..." %>
+</div>

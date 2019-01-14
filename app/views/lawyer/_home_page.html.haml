@@ -1,0 +1,22 @@
+- #detail  = user.detail
+- photo_url = user.photo.url(:medium)
+- tab       = tab == User::ACCOUNT_TAB ? tab : User::SESSION_TAB
+- txt_color = ['black','blue']
+- if current_user.is_lawyer? && current_user.is_online
+  %h3.lawyer_notice You are now shown as available by video chat. Keep this window open to remain available.
+%div
+  - if tab == User::ACCOUNT_TAB
+    = render :partial =>"/users/edit_info", :locals => {:user => user}
+  - elsif tab == User::SESSION_TAB
+    = render :template =>"/conversations/index"
+  - if false
+    %div
+      %div
+        - if is_self_login?(user.id) or is_admin_login?
+          %span{:style => "float:right;"}
+            = link_to "Edit", edit_user_path(user.id), :title =>"Edit Account"
+      .desc
+        = image_tag photo_url
+        %br/
+        - if is_self_login?(user.id) or is_admin_login?
+          = render :partial =>"/users/upload_image", :locals =>{:user =>user}

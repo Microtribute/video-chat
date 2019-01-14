@@ -1,0 +1,24 @@
+<div style="font-size:1.5em;">
+ List of Attorney Homepage Images
+<table>
+  <thead>
+    <tr>
+      <td>Name</td>
+      <td></td>
+      <td></td>
+    </tr>
+  </thead>
+  <tbody>
+    <% @homepage_images.each{|image|  %>
+      <tr>
+        <td> <%= image.lawyer.full_name %> </td>
+        <td>
+          <%= link_to "Remove", admin_homepage_image_path(image.id), :method =>:delete, :confirm =>"Are you sure?" %>
+        </td>
+        <td><%= image_tag(image.photo.url(:large)) %></td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+</div>
+

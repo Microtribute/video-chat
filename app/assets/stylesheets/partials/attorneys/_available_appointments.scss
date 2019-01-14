@@ -1,0 +1,100 @@
+@mixin available_appointments($num){
+  div.available-appointments{
+    width: $num * 105px;
+    margin: 0 auto 10px auto;
+    height: 122px;
+    ul {
+      float: left;
+      li {
+        width: 105px;
+        text-align: center;
+        margin: 10px 0;
+        &.title {
+          margin: 5px 0 15px 0;
+        }
+      }
+    }
+    a{
+      text-decoration:none;
+      text-transform:uppercase;
+      font-size:11px;
+      font-weight:bold;
+      color:#313131;
+      &.selected {
+        border: 0px;
+        color: red;
+        cursor: default;
+        &:hover {
+          color: red;
+        }
+      }
+    }
+    a:hover{
+      color:#1076e8;
+    }
+    a.day-0{
+      border: 1px solid #9e5bcd;
+      padding: 3px 4px;
+      color: #fff;
+      font-size: 11px;
+      font-weight:bold;
+      background: #bc7be9;
+      -moz-border-radius: 5px;
+      -webkit-border-radius: 5px;
+    }
+    a.day-1{
+      font-weight:bold;
+      border: 1px solid #ca7e3b;
+      padding: 3px 4px;
+      color: #fff;
+      font-size: 11px;
+      background: #e09858;
+      -moz-border-radius: 5px;
+      -webkit-border-radius: 5px;
+    }
+    a.day-2{
+      border: 1px solid #6bae69;
+      font-weight:bold;
+      padding: 3px 4px;
+      color: #fff;
+      font-size: 11px;
+      background: #85ca83;
+      -moz-border-radius: 5px;
+      -webkit-border-radius: 5px;
+    }
+    a.day-3{
+      font-weight:bold;
+      border: 1px solid #5691ce;
+      padding: 3px 4px;
+      color: #fff;
+      font-size: 11px;
+      background: #6aa7e5;
+      -moz-border-radius: 5px;
+      -webkit-border-radius: 5px;
+    }
+    .times{
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: bold;
+      padding-left: 20px;
+      display:inline-block;
+      background: image-url('clock_icon.png') no-repeat;
+      height:20px;
+      .grey{
+        display:inline;
+        width: 50px;
+        color: grey;
+      }
+    }
+  }
+  a.appointments{
+    text-decoration:none;
+    color:#313131;
+    font-size:13px;
+    display:inline-block;
+    border-bottom:1px dotted #BBC1C4;
+  }
+  a.appointments:hover{
+    border-bottom:0;
+  }
+}

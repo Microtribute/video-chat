@@ -1,0 +1,99 @@
+.row.offering{:id => "offering_#{offering.id}"}
+  .left.row_block
+    .avatar
+      = link_to_unless_current(image_tag(lawyer.photo.url(:thumb), class: "hide_on_attorneys"), attorney_path(lawyer, slug: lawyer.slug))
+    .stars
+      - if lawyer.reviews.average(:rating).to_i > 0
+        = link_to_unless_current content_tag(:div, "", class: "rating", data: { score: lawyer.reviews.average(:rating).to_i }), attorney_path(lawyer, slug: lawyer.slug, anchor: "reviews"), class: "rating-stars"
+    - if lawyer.reviews.count > 0
+      = content_tag :span, pluralize(lawyer.reviews.count, "review", "reviews"), class: "reviews"
+    .clear      
+  .middle.row_block  
+    %h1= link_to_unless_current "#{offering.name}", offering
+    .online_icons
+      - if lawyer.is_online
+        %span.video.online= start_or_video_button_p(lawyer)
+      - else
+        %span.video.offline
+      - if lawyer.is_available_by_phone?
+        %span.voice.online= start_phone_consultation_p(lawyer)
+      - else 
+        %span.voice.offline
+      %span.note= start_or_schedule_button_text_profile(lawyer)
+      - if lawyer.daily_hours.present?
+        %span.text.online
+          %a.appt-select{:href => '#'}
+      - else
+        %span.text.offline
+      .video_chat.online.tooltip Available for video chat
+      .voice_chat.online.tooltip Available for voice chat
+      .note_chat.tooltip Ask (text) question
+      .text_chat.tooltip No appointments available
+      .video_chat.offline.tooltip Not available by video now
+      .voice_chat.offline.tooltip Not available by phone now
+    .clear  
+    .description  
+      = simple_format offering.description, class: "description"
+      -# if offering.practice_area.present?
+        %p
+          Practice area: #{offering.practice_area.name}
+      %p.hide_on_attorneys
+        Delivered by: #{link_to lawyer.full_name, attorney_path(lawyer, slug: lawyer.slug)}
+        /%span.status= status_message(lawyer)          
+      -#.free
+        %table
+          %tbody
+            %tr
+              %td
+                %p= start_or_schedule_button(lawyer)
+
+      %a.free{:href => "/attorneys/#{lawyer.id}/#{CGI::escape(lawyer.full_name)}"}
+        %p= "#{number_to_currency(offering.fee, precision: 0)} flat fee"
+        %p.small free consultation
+      .free_dropdown{:href=> "#"}
+      .button_tooltip
+        .button-content
+          %ul
+            - if lawyer.is_online && !lawyer.is_busy
+              %li
+                = start_or_schedule_button(lawyer)
+            - if lawyer.is_available_by_phone?
+              %li
+                = start_phone_consultation(lawyer)
+            - if lawyer.daily_hours.present?
+              %li
+                %a.appt-select{:href => '#'} Schedule a consultation                
+            %li
+              = start_or_schedule_button_text(lawyer)        
+  - if lawyer.daily_hours.present?      
+    .right.row_block
+      %p Available appointments
+      .available-appointments
+        - lawyer.next_available_days(2).each_with_index do |d, i|
+          %ul
+            %li.title
+              %span{:class => "day-#{i}"}
+                #{d.strftime("%a, %m/%d")}
+            - times = lawyer.available_times(d)
+            - times[0..2].each do |t|
+              %li
+                %a.appt-select{:href => "#", "data-time" => t.strftime("%Y-%m-%d %H:%M:%S")}
+                  #{t.strftime("%l:%M%p")}
+            - if times.length > 3
+              %li
+                %a.appt-select{:href => "#"}
+                  More                                            
+        .clear  
+      %a.appt-select.appointments{:href => '#'}
+        All available appointments
+
+    - # content for the modal dialog we are going to display
+    %div{:style => "display:none;"}
+      = render(:partial => "/attorneys/appointment_form", :locals => {:lawyer => lawyer})                    
+:javascript
+  $(".row .rating").raty({
+      path: "/assets/raty",
+      hintList: ['', '', '', '', '', ''],
+      readOnly: true,
+      start: function() {return $(this).data("score")}
+  });    

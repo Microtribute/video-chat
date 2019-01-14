@@ -1,0 +1,454 @@
+@import "partials/lawyer/lawyer";
+@import "partials/attorneys/appointment_form";
+
+body.users.home, body.offerings.show {
+  form.filters {
+    float:left;
+    width: 100px;
+  }
+
+  div.lawyer, div.offering{
+    @include lawyer;
+  }
+
+  div.appointment-form {
+    @include appointment_form
+  }
+}
+
+#container .notice.with-avatar {
+  padding: 5px 15px !important;
+
+  .text {
+    width: 89%;
+  }
+}
+
+#container .notice {
+  font-size: 1.4em;
+  color: #333;
+  width: 65% !important;
+  padding: 10px 15px !important;
+  text-align: left;
+  margin: 20px auto;
+  background-color: #f2fafc;
+  border: 1px #d3e1e1 solid;
+  position: relative;
+  border-radius: 6px;
+
+  .avatar, .text {
+    display: inline-block;
+    display: -moz-inline-stack;
+    *display: inline;
+    vertical-align: middle;
+    zoom: 1;
+  }
+
+  .avatar {
+    width: 40px;
+    margin-right: 1.4em;
+  }
+
+  .text {
+    position: relative;
+    width: 99.4%;
+  }
+
+  a#close_notice {
+    position: absolute;
+    top: -1px;
+    border: 0;
+    right: 0;
+    display: block;
+    width: 20px;
+    height: 20px;
+    background: image-url("close_notice.png");
+    text-indent: -9999999px;
+  }
+}
+
+.form-header {
+  font-family: myriad-pro, sans-serif;
+  padding: 20px 0;
+  font-size: 4.75em !important;
+  font-weight: 300;
+  text-align: center;
+  color: #818181;
+  background: image-url("shadow-down.png") no-repeat bottom center;
+  margin-bottom: 0.75em !important;
+}
+
+.form-wrapper {
+  &.signin {
+    color: #818181;
+    text-align: center;
+    padding: 20px 25px;
+    margin-bottom: 20px !important;
+    font-size: 1.8em;
+  }
+
+  padding: 0 !important;
+  background: #f5f5f5;
+  background: -webkit-gradient(linear,center top,center bottom,from(white),to(whiteSmoke));
+  background: -moz-linear-gradient(top,white,whiteSmoke);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff',endColorstr='#fff5f5f5',GradientType=0);
+ 
+  .form-inner {
+    padding: 20px 45px 7px;
+    display: inline-block;
+    width: 325px;
+    #submit_login{
+      float: left;
+      display: block;
+    }
+    p{
+      float: right;
+    }
+  }
+  
+  .form-notice {
+    display: block;
+    margin-top: 12px;
+  }
+
+ .actions {
+   border-top: 1px solid #dfdfdf;
+   border-bottom-right-radius: 8px;
+   -moz-border-radius-bottomright: 8px;
+   -webkit-border-bottom-right-radius: 8px;
+   border-bottom-left-radius: 8px;
+   -moz-border-radius-bottomleft: 8px;
+   -webkit-border-bottom-left-radius: 8px;
+   background: #f5f5f5;
+   background: -webkit-gradient(linear,center top,center bottom,from(white),to(whiteSmoke));
+   background: -moz-linear-gradient(top,white,whiteSmoke);
+   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff',endColorstr='#fff5f5f5',GradientType=0);
+  } 
+}
+
+form.filters {
+  ul.practice-areas {
+    ul.children {
+      padding-left: 15px;
+    }
+  }
+}
+
+.user_rate {
+  margin-bottom: 10px !important;
+  display: block;
+  position: relative;
+
+  .rate_hint {
+    position: absolute;
+    right: 0;
+    top: 0.6em;
+  }
+
+  label.message {
+    display: block !important;
+    margin-bottom: 1.0833em;
+    margin-left: 2px;
+  }
+
+  input#lawyer_rate {
+    margin-bottom: 2px !important;
+  }
+}
+
+.user_free_consultation_duration {
+  position: relative;
+  display: block;
+
+  .duration_hint {
+    float: right;
+    margin-right: 25px;
+    padding-top: 8px;
+    font-size: 1.5em;
+    color: #371C1C;
+    right: 4.1667em;
+    top: 0.2em;
+  }
+  #lawyer_free_consultation_duration{
+    background: image-url('select_bg_offer.png') no-repeat;
+    width: 144px;
+    height: 28px;
+    font-size: 13px;
+    padding: 5px 5px 5px 10px;
+    margin-top: 4px;
+    color: #404040;
+    border: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    overflow: hidden; 
+  }
+}
+
+body.users.home {
+  div.load-more {
+    background:#f6f6f6;
+    border:1px solid #d0d2d5;
+    float: left;
+    width:722px;
+    padding: 10px 0;
+    margin-top: 15px;
+    background: #f6f6f6; /* Old browsers */
+    background: -moz-linear-gradient(top,  #f6f6f6 0%, #e8e8e8 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f6f6f6), color-stop(100%,#e8e8e8)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #f6f6f6 0%,#e8e8e8 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #f6f6f6 0%,#e8e8e8 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #f6f6f6 0%,#e8e8e8 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #f6f6f6 0%,#e8e8e8 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6f6f6', endColorstr='#e8e8e8',GradientType=0 ); /* IE6-9 */
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    a {
+      border: 0px;
+      color:#4c4c4c;
+      font-size: 16px;
+      display: block;
+      text-align: center;
+    }
+  }
+}
+
+label.iPhoneCheckLabelOn, label.iPhoneCheckLabelOff {
+  margin: 0 0 0 0 !important;
+  color: white !important;
+}
+
+body.users.landing_page, body.users.learnmore{
+  .new_question#new_question{
+    background-color:rgba(0,0,0,0.1);
+    border:1px solid #515862;
+    float: left;
+    width:530px;
+    margin-top:30px;
+    padding-top:20px;
+    padding-bottom:19px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    h2{
+      text-align:center;
+      color:#3e4855;
+      border:0;
+      font-size:16px;
+      margin-top: 19px;
+      word-spacing: 2px;
+      margin-bottom: 18px;
+    }
+    p.notice{
+      line-height: 36px;
+      margin-left: 35px;
+      margin-top: 17px;
+      text-align: center;
+    }
+    .placeholder_text{
+      top:14px !important;
+    }
+    input#question_body{
+      color: #393C3D;
+      display:block;
+      float:left;
+      height:45px;
+      width:390px;
+      padding:0 10px;
+      border:1px solid #5c636d;
+      border-right:0;
+      background-color:#f6f6f6;
+      font-size:16px;
+      font-weight:bold;
+      margin-left: 20px;
+      -moz-border-radius: 5px 0 0 5px;
+      -webkit-border-radius: 5px 0 0 5px;   
+      -moz-box-shadow: inset 0px 1px 2px #e3e3e3;
+      -webkit-box-shadow: inset 0px 1px 2px #e3e3e3;
+      box-shadow: inset 0px 1px 2px #e3e3e3;
+    }
+    input#question_body:focus{
+      background-color:#fff;
+    }
+    input#question_body:-moz-placeholder{
+      color: #a8a8a8;
+    }
+    input[type="submit"]{
+      background:image-url('ask_submit_full.png') no-repeat 0px -1px;
+      border-right:1px solid #5c636d;
+      border-bottom:1px solid #5c636d;
+      border-top:1px solid #5c636d;
+      height:47px;
+      width:80px;
+      display:block;
+      float:left;
+      border:0;
+    }
+    input[type="submit"]:hover{
+      background-position: 0px -50px;
+    }
+    input[type="submit"]:active{
+      background-position: 0px -99px;
+    }
+    .question_state, .question_area{
+      float:left;
+      width:200px;
+      margin-top:10px;
+    }
+    label{
+      color:#fff;
+      font-size:13px;
+      -moz-text-shadow: 1px 1px 1px #595e66;
+      -webkit-text-shadow: 1px 1px 1px #595e66;
+      text-shadow: 1px 1px 1px #595e66;
+    }
+    select{
+      float:left;
+    }
+    .question_state_bot, .question_area_bot{
+      margin-left:0;
+      margin-top:5px;
+    }
+  }
+}
+
+body.users.start_phone_call{
+  p.notice{
+    margin-bottom:25px;
+    text-align:center;
+  }
+}
+
+body.users.show.logged-in{
+  #page.session-summary > div{
+    .profile.summary_of_sessions{
+      .profile-block{
+        padding:0px;
+        width:757px;
+        -webkit-border-top-right-radius: 8px;
+        -webkit-border-bottom-right-radius: 8px;
+        -moz-border-radius-topright: 8px;
+        -moz-border-radius-bottomright: 8px;
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+        h2{
+          margin:0;
+          font-size:15px;
+          color:#272727;
+          border-bottom:1px solid #e2e3e5;
+          padding:20px 30px;
+          -webkit-border-top-right-radius: 8px;
+          -moz-border-radius-topright: 8px;
+          border-top-right-radius: 8px;
+          background: #fcfdfd; /* Old browsers */
+          background: -moz-linear-gradient(top,  #fcfdfd 0%, #f0f4f7 100%); /* FF3.6+ */
+          background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fcfdfd), color-stop(100%,#f0f4f7)); /* Chrome,Safari4+ */
+          background: -webkit-linear-gradient(top,  #fcfdfd 0%,#f0f4f7 100%); /* Chrome10+,Safari5.1+ */
+          background: -o-linear-gradient(top,  #fcfdfd 0%,#f0f4f7 100%); /* Opera 11.10+ */
+          background: -ms-linear-gradient(top,  #fcfdfd 0%,#f0f4f7 100%); /* IE10+ */
+          background: linear-gradient(to bottom,  #fcfdfd 0%,#f0f4f7 100%); /* W3C */
+          filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfdfd', endColorstr='#f0f4f7',GradientType=0 ); /* IE6-9 */  
+        }
+        p{
+          padding:0px 29px 0px 30px;
+          color:#404040;
+          font-size:14px;
+        }
+        table.summary{
+          border-spacing: 0;
+          margin-bottom:0;
+          thead{
+            background: #fafafa; /* Old browsers */
+            background: -moz-linear-gradient(top,  #fafafa 0%, #f2f2f2 100%); /* FF3.6+ */
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fafafa), color-stop(100%,#f2f2f2)); /* Chrome,Safari4+ */
+            background: -webkit-linear-gradient(top,  #fafafa 0%,#f2f2f2 100%); /* Chrome10+,Safari5.1+ */
+            background: -o-linear-gradient(top,  #fafafa 0%,#f2f2f2 100%); /* Opera 11.10+ */
+            background: -ms-linear-gradient(top,  #fafafa 0%,#f2f2f2 100%); /* IE10+ */
+            background: linear-gradient(to bottom,  #fafafa 0%,#f2f2f2 100%); /* W3C */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#f2f2f2',GradientType=0 ); /* IE6-9 */
+            td{
+              color:#3f3f3f;
+              padding:14px 10px;
+            }
+          }
+          tr{
+          }
+          td{
+            font-size:13px;
+            border-bottom:1px solid #e2e3e5;
+            border-right: 1px solid #e2e3e5;
+            text-align:center;
+            vertical-align:center;
+            padding:15px 10px;
+          }
+          tr.gray{
+            background:#f4f5f7;
+          }
+          td.last{
+            border-right: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+body.users.create_phone_call{
+  #wrapper-main{
+    #container{
+      .call-container{
+        #payment_div{
+          float: none !important;
+          margin: 0 auto;
+          padding-left: 63px;
+        }
+      }
+    }
+  }
+}
+
+body.users.home{
+  .ui-dialog{
+    width: 540px !important;
+    h2{
+      text-align:center;
+    }
+    p{
+      text-align:center;
+    }
+    h2.appointment-info{
+      color:red;
+      margin:20px 0;
+    }
+    h3{
+      text-align:center;
+      margin-bottom:5px;
+    }
+    hr{
+      margin: 8px -29px 8px;
+    }
+    .error{
+      text-align:center;
+    }
+    .button{
+      font-size: 16px;
+      color:white;
+      margin-top: 6px;
+      font-weight: bold;
+      padding: 0 11px;
+    }
+    .appointment-form{
+      padding: 0 20px;
+    }
+    .consutation_scheduled{
+      height:180px !important;
+      h2{
+        text-align:left;
+      }
+      p{
+        text-align:left;
+      }
+    }
+  }
+}
+

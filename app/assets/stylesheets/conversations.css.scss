@@ -1,0 +1,17 @@
+body.conversations {
+  ul.summary-details {
+    li {
+      line-height: 1.5;
+      margin: 0.25em 0;
+
+      &:nth-child(odd) {
+        background-color: #F7EEC6;
+      }
+
+      .label {
+        color: #222;
+        font-weight: bold;
+      }
+    }
+  }
+}

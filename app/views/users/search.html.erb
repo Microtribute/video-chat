@@ -1,0 +1,78 @@
+<%
+  options_states_arr = []
+  options_states_arr << ['Any State', 0]
+  State.all.each { |state|
+    if state.lawyers.approved_lawyers.count > 0
+      options_states_arr << [state.name, state.id]
+    end
+  }
+
+  options_pa_arr = []
+  options_pa_arr << ['All types', 0]
+  PracticeArea.parent_practice_areas.order(:name).each { |pa|
+    options_pa_arr << [pa.name, pa.id]
+  }
+  default_image = HomepageImage.first
+  lawyer = default_image.lawyer
+  practice_area_text=""
+  practice_area_text = "Advising on #{lawyer.practice_areas_listing} law. "
+  description = practice_area_text + "Free consultation, then #{number_to_currency lawyer.rate}/minute."
+%>
+
+<div id="page" class="home">
+  <div>
+    <!-- Image carousel block with a link to json file consisting of data about previewed lawyers -->
+    <div class="image-carousel" dataurl="/search/carsousel_images.json">
+      <div class="carousel-image">
+        <%= image_tag default_image.photo.url(:large), :alt => "" %>
+      </div>
+      <div class="carousel-description">
+        <h4><%= "Attorney #{lawyer.full_name}" %></h4>
+        <span><%= description %></span>
+      </div>
+    </div>
+    <!-- Filtering form -->
+    <div id="splash">
+      <h1>Legal advice over video chat, <br />billed by the minute.</h1>
+      <!-- h2>Hassle-free legal counsel from the comfort of your home or office.</h2 -->
+
+      <h3 style="font-size: 2.16667em; font-weight: normal; line-height: 1; margin: 2em 0 0.83em 0;">Where and what is your concern?</h3>
+      <%= form_tag results_path, :method => :get, :style => "margin: 0;" do %>
+        <div class="inp">
+          <%= label_tag "select_state", "State:" %>
+          <%= select_tag "select_state", options_for_select(options_states_arr) %>
+        </div>
+        <div class="inp">
+          <%= label_tag "select_pa", "Type of issue:" %>
+          <%= select_tag "select_pa", options_for_select(options_pa_arr) %>
+        </div>
+        <div class="inp" id="specialities_container">
+          <%= label_tag "select_sp", "Specific concert:" %>
+          <%= select_tag "select_sp", options_for_select(["none", 0]) %>
+        </div>
+
+        <%= submit_tag "Find Lawyers", :style => "display: block;", :class => "button" %>
+      <% end %>
+    </div>
+    <div class="clear"></div>
+  </div>
+</div>
+
+<%= javascript_tag do %>
+  $(document).ready(function() {
+    $('#specialities_container').hide();
+    $('#select_pa').change(function() {
+      if($('#select_pa').val() != 0) {
+        $.ajax({
+          url: "/search/populate_specialities_next",
+          data: 'pid=' + $('#select_pa').val(),
+          success: function(data) {
+            $('#specialities_container').html(data);
+            $('#specialities_container').show();
+          }
+        })
+      }
+    });
+  });
+<% end %>
+

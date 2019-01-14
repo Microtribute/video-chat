@@ -1,0 +1,9 @@
+<div class="notice <%= "with-avatar" if avatar.present? %>">
+  <% if avatar.present? %>
+  <div class="avatar"><%= image_tag avatar, width: width, height: height %></div>
+  <% end %>
+  <div class="text">
+    <%= text.html_safe %>
+    <a href="#" id="close_notice">Close</a>
+  </div>
+</div>

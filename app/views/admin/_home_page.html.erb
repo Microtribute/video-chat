@@ -1,0 +1,79 @@
+
+<span style="float: right;"> <%= link_to "Edit Admin Account", edit_user_path(current_user) %></span>
+
+<div style="width: 93%;margin-right: 10px;margin-top: 20px;float: left;">
+  <div class="header_mb">
+    Application Specific Values
+  </div>
+  <div class="desc">
+    <% AppParameter.all.each{|pa| %>
+      <%= pa.name %>
+      <input type="text" id="pvalue_<%= pa.id %>" value="<%= pa.value %>" size="78%" />
+      <input type="button" value="Save" onclick="$.ajax({
+            url: '<%= update_parameter_path %>',
+            data: {id:<%= pa.id %>,value: $('input#pvalue_<%= pa.id %>').val()},
+            success : function(text){alert(text);}
+          });" />
+      <br/><br/>
+    <% } %>
+  </div>
+</div>
+
+<div style="width: 30%;margin-right: 10px;margin-top: 20px;float: left;">
+  <div class="header_mb">
+    Client Management
+  </div>
+  <div class="desc">
+    <%= link_to "Client List", admin_clients_path %><br />
+    <%= link_to "Add New Client", new_admin_client_path %><br />
+    <%= link_to "Clients questions", admin_questions_path %>
+  </div>
+</div>
+
+<div style="width: 30%;margin-right: 10px;margin-top: 20px;float: left;">
+  <div class="header_mb">
+    Lawyer Management
+  </div>
+  <div class="desc">
+    <%= link_to "Lawyer List", admin_lawyers_path %><br/>
+    <%= link_to "Add New Laywer", new_admin_lawyer_path %>
+  </div>
+</div>
+
+<div style="width: 30%;margin-right: 10px;margin-top: 20px;float: left;">
+  <div class="header_mb">
+    Practice Area Management
+  </div>
+  <div class="desc">
+    <%= link_to "Practice Areas List", admin_practice_areas_path %><br/>
+    <%= link_to "Add New Practice Area", new_admin_practice_area_path %>
+  </div>
+</div>
+
+<div style="width: 30%;margin-right: 10px;margin-top: 20px;float: left;">
+  <div class="header_mb">
+    Lawyer Homepage Image Management
+  </div>
+  <div class="desc">
+    <%= link_to "Lawyer Homepage Image List", admin_homepage_images_path %><br/>
+  </div>
+</div>
+
+<div style="width: 30%;margin-right: 10px;margin-top: 20px;float: left;">
+  <div class="header_mb">
+    Client-Lawyer Sessions
+  </div>
+  <div class="desc">
+    <%= link_to "Recent Sessions", admin_clsessions_path %><br/>
+  </div>
+</div>
+<div style="width: 30%;margin-right: 10px;margin-top: 20px;float: left;">
+  <div class="header_mb">
+    Page Management
+  </div>
+  <div class="desc">
+    <%= link_to "Pages", admin_pages_path %><br/>
+    <%= link_to "Add New Page", new_admin_page_path %><br/>
+  </div>
+</div>
+

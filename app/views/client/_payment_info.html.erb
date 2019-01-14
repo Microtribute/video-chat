@@ -1,0 +1,35 @@
+    <h1>Update payment information</h1>
+    <div>
+      <div class="error_explanation">
+        <ul class="errors">
+          <li> <div id="stripe_errors" class ="stripe_error"></div></li>
+          <% if @msg %>
+            <li> <div class ="stripe_error"><%= @msg %></div></li>
+          <% end %>
+        </ul>
+      </div>
+      <%= form_tag card_detail_path, :id => 'payment-form' do %>
+        <%= hidden_field_tag :form_type, "html" %>
+        <%= hidden_field_tag :stripe_card_token %>
+          <fieldset class="personal-info">
+              <%= image_tag("creditcards.png") %>
+              <input type="text" name="card_number" autocomplete="off" placeholder="Credit card number" maxlength="26" size="26" id="card_detail_card_number"></input>
+              <div class="label">Expires On</div>
+              <%= select_month nil, {add_month_numbers: true}, {name: "card_detail[expire_month]", id: "card_month"} %>
+  <%= select_year nil, {start_year: Date.today.year, end_year: Date.today.year+15}, {name: "card_detail[expire_year]", id: "card_year"} %>
+              <input id="card_detail_card_verification" type="password" size="9" autocomplete="off" name="scode" maxlength="4"></input>
+              <div src="question.png" class="help-text" tooltip="The three or four digit code on the back of your card."></div>
+          </fieldset>
+          <div class="clear"></div>
+          <div >
+            <noscript>JavaScript is not enabled and is required for this form. First enable it in your web browser settings.
+            </noscript>
+          </div>
+          <button type="submit" class="button blue">Update Card Detail</button><span class="label">Your card will not be charged</span>
+          <div class="sealed" style="margin: 10px 0;"><%= render "godaddy_seal" %></div>
+      </form>
+    </div>
+</div>
+<% end %>
+     <!-- END CONTENT -->
+

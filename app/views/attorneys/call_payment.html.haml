@@ -1,0 +1,36 @@
+#inline-wrapper
+  .main_content
+    #results.results
+      = content_tag :h1, "Start a call with #{@attorney.full_name}"
+      = render partial: "lawyer/lawyer", locals: { lawyer: @attorney }
+      .payment-details
+        = content_tag :h2, "Talking to #{@attorney.full_name} is completely free for the first #{@attorney.free_consultation_duration} minutes."
+        %p To start the call, though, you do need to have payment info on file in case the call goes longer.
+        .error_explanation
+          %ul.errors
+            %li
+              #stripe_errors.stripe_error{:style => "color:red;"}
+            %li
+              .stripe_error{:style => "color:red;"}
+        = form_tag("/updatePaymentInfo", :id => 'payment-form', :remote =>true) do
+          .sealed{:style => "position: absolute; bottom: 3px; left: 150px;"}
+            = render "godaddy_seal"
+          = hidden_field_tag :stripe_card_token
+          = hidden_field_tag :form_type, "ajax"
+          = hidden_field_tag :attorney_id, @attorney.id
+          %div{:style => "margin-bottom: 0.75em;"}
+            %label{:for => "card_number"} Credit card number:
+            %input#card_detail_card_number{:autocomplete => "off", :maxlength => "26", :name => "card_number", :placeholder => "Credit card number", :size => "26", :type => "text"}
+          #security_wrapper
+            #exp_group
+              %label{:for => "expire_month"} Expiration:
+              %select#card_month{:name => "expire_month"}
+                - for i in 0..11
+                  <option #{"selected='selected'" if i==0} value="#{i+1}">#{i+1}
+              = select_year nil, {start_year: Date.today.year, end_year: Date.today.year+5}, {name: "expire_year", id: "card_year"}
+            #sec_group
+              %label{:for => "scode"} Security code:
+              %input#card_detail_card_verification{:autocomplete => "off", :maxlength => "4", :name => "scode", :size => "9", :type => "password"}
+              .help-text{:src => "question.png", :tooltip => "The three or four digit code on the back of your card."}
+            .clear
+          = submit_tag("Continue", :id => 'payment_overlay_submit_button', :class => "button blue small_font", style: "margin-top: 0.5em;")

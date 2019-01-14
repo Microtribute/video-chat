@@ -1,0 +1,2 @@
+$(".actions > .status").show().text("Saved").delay(1000).fadeOut();
+$("#matched_lawyers_count").text("<%= pluralize(matched_lawyers_count(@question), "lawyer") %>").effect("highlight", {}, 1000);

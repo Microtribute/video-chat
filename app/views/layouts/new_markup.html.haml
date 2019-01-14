@@ -1,0 +1,41 @@
+!!!
+%html
+  %head
+    %title= content_for?(:title) ? yield(:title) : "Lawdingo: Ask a Lawyer Online Now - Free Consultations for Your Legal Questions"
+    = stylesheet_link_tag "new_markup"
+    = javascript_include_tag "new_markup"
+    /= javascript_include_tag 'site', 'users', 'twipsy', 'hints', 'jquery.timer','swfobject','jquery-impromptu.3.2'
+  
+  %body
+    #header
+      .wrapper
+        .links
+          %ul
+            %li
+              %a{:href => '#'} Login
+            %li
+              %a.signup{:href => '#'} Signup
+            %li
+              %a.lawyers_signup{:href => '#'}
+        %a.logo{:href => ''}
+          = image_tag('logo_new.png', :alt => 'Home')
+    #container
+      = yield
+    #footer
+      .footer_content
+        %span.left &copy; Lawdingo
+        %ul
+          %li
+            %a{:href => '#'}
+              About
+          %li
+            %a{:href => '#'}
+              Contact
+          %li
+            %a{:href => '#'}
+              Blog
+          %li
+            %a{:href => '#'}
+              Terms & Privacy
+          
+    

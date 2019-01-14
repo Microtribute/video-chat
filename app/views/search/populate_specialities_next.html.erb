@@ -1,0 +1,7 @@
+<%= label_tag "select_sp", "Specific concern:" %>
+<% unless @practice_area_specialities.blank? %>
+  <%= select_tag :select_sp, raw("<option value=0>General #{@practice_area.name}</option>") + options_from_collection_for_select(@practice_area_specialities, :id, :name) -%>
+<% else %>
+  <%= select_tag('select_sp', options_for_select([["none", 0]])) %>
+<% end %>
+

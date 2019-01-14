@@ -1,0 +1,149 @@
+#!/usr/bin/env ruby
+
+begin
+  require 'trollop'
+rescue
+  puts "Please install Trollop (gem install trollop)"
+end
+
+require 'net/ssh'
+
+class ReleaseToStaging
+
+  attr_reader :qa_dir, :original_branch, :rebase_branch
+
+  def self.run(opts)
+    self.new(opts).run
+  end
+
+  def initialize(opts = {})
+    @qa_dir = opts[:qa_dir]
+    @rebase_branch = opts[:rebase_branch]
+  end
+
+  def run
+    Dir.chdir(File.expand_path("../../", __FILE__)) do
+      # get the current branch
+      @original_branch = self.get_current_branch
+      
+      if self.original_branch == self.rebase_branch
+        puts "\n\nCannot run this command from #{self.rebase_branch} - " +
+          "please select another branch\n\n"
+        Kernel.exit
+      end
+
+      self.rebase
+
+      if self.ask("Do you want to run the tests?")
+        self.run_tests
+      else 
+        puts "\nOK - Make sure to run them on your own!\n"
+        Kernel.exit
+      end
+
+      if self.ask("Do you want to release to #{self.qa_dir} in qa?")
+        self.push_to_github
+        self.release_to_qa
+      else
+        puts "\nKeep on truckin and use me to push to QA when you're ready\n"
+        Kernel.exit
+      end
+
+    end
+  end
+
+  protected
+
+  def ask(question)
+    puts question + " [y/n]"
+    return $stdin.gets.strip[0].downcase == "y"
+  end
+
+  def get_current_branch
+    branch = `git branch`.split("\n").select{|l| l =~ /\*/}.first
+    branch.gsub(/\*/,'').strip
+  end
+
+  def push_to_github
+    system(
+      "git push -f origin #{self.original_branch}:#{self.original_branch}"
+    )
+  end
+
+  def rebase
+    system("git checkout #{self.rebase_branch}")
+    system("git fetch --all")
+    system("git pull origin #{self.rebase_branch}")
+    system("git checkout #{self.original_branch}")
+    system("git rebase -i #{self.rebase_branch}")
+  end
+
+  def release_to_qa
+    opts = ["lawdingo.com", "ubuntu", :keys => ["~/nikKey.pem"]]
+    Net::SSH.start(*opts) do |ssh|
+
+      dir = "/home/ubuntu/codebase/staging/#{self.qa_dir}"
+      output = ssh.exec!("cd #{dir} && git branch")
+
+      branch_exists = (output =~ /#{original_branch}/)
+
+      commands = [
+        "source ~/.rvm/scripts/rvm",
+        "ruby -v",
+        "cd #{dir}",
+        "git fetch --all",
+        "git reset --hard"
+      ]
+
+      # create the branch if it doesn't exist
+      if branch_exists
+        commands << "git checkout master"
+        commands << "git branch -D #{self.original_branch}"
+      end
+        
+      commands += [
+        "git branch -t #{self.original_branch} origin/#{self.original_branch}",
+        # now check out our branch
+        "git checkout #{self.original_branch}",
+        "git pull origin #{self.original_branch}",
+        # bundle and touch tmp/restart and we should be all set
+        # hardcoding was the only way to get this to work unfortunately
+        # TODO: investigate the shell this is executed in
+        "bundle",
+        "touch tmp/restart.txt"
+      ]
+
+      puts ssh.exec!("/bin/bash -l -c '#{commands.join(" && ")}'")
+      
+    end
+  end
+
+  def run_tests
+    status = system("bundle exec rspec spec")
+    # the build succeeded
+    unless $?.exitstatus.to_i == 0
+      puts "The build failed.  Please fix the errors and try again"
+      Kernel.exit
+    end
+  end
+
+end
+
+opts = Trollop::options do
+  banner <<-EOF
+
+ReleaseToStaging
+
+A simple command line interface to
+
+1) Rebase your branch off of a branch (defaults to master)
+2) Run all of the tests
+3) Deploy your changes to a staging installation
+
+Options:
+  EOF
+  opt :qa_dir, "Directory to release to on QA", :default => `whoami`.strip
+  opt :rebase_branch, "Branch to rebase off of", :default => "master"
+end
+
+ReleaseToStaging.run(opts)

@@ -1,0 +1,127 @@
+#!/usr/bin/env ruby
+
+begin
+  require 'rubygems'
+  require 'erb'
+  require 'fileutils'
+  require 'trollop'
+  require 'yaml'
+rescue => e
+  puts "You must install Trollop"
+  puts "gem install trollop"
+end
+
+
+
+class BackupDatabase
+
+  attr_reader :environment, :config, :backup_dir
+
+  def initialize(opts = {})
+    # eat STDERR, it's putting in annoying output
+    STDERR.reopen("/dev/null")
+
+    @environment = opts[:environment]
+    @backup_dir = opts[:backup_dir]
+    self.configure
+  end
+
+  def self.run(opts)
+    self.new(opts).run
+  end
+
+  def run
+    self.create_directories
+    self.clear_and_archive_old_backups
+    self.dump_db
+  end
+
+  protected
+
+  def clear_and_archive_old_backups
+    Dir.chdir(self.backup_dir) do
+      Dir["*"].each do |file|
+        # clear out old files
+        if File.ctime(file) < (Date.today - 5).to_time
+          puts "Removing old backup #{file}"
+          FileUtils.rm_rf(file)
+        # archive any unarchived files
+        elsif file =~ /\.sql$/
+          puts "Archiving #{file}"
+          `tar czvf #{file}.tgz #{File.basename(file)}`
+          FileUtils.rm_rf(file)
+        end
+      end 
+    end
+  end
+
+  def configure
+    database_yml = File.read(
+      File.expand_path("../../config/database.yml", __FILE__)
+    )
+    config = YAML::load(ERB.new(database_yml).result(binding))
+    @config = config[self.environment]
+  end
+
+  def create_directories
+    FileUtils.mkdir_p(self.backup_dir)
+  end
+
+  def current_backup_file
+    File.join(self.backup_dir, Date.today.strftime("%Y-%m-%d.sql"))
+  end
+
+  def current_backup_file_size
+    if File.exists?(self.current_backup_file)
+      (File.size(self.current_backup_file) / 1024000.0).round(2)
+    else
+      0.0
+    end
+  end
+
+  def database
+    self.config["database"]
+  end
+
+  def dump_db
+    self.remove_current_backup_file
+    puts "Dumping #{self.host}/#{self.database} to #{self.current_backup_file}"
+    db_thread = Thread.new{
+      system("mysqldump -u #{self.username} --skip-lock-tables --password=#{self.password} -h #{self.host} #{self.database} > #{self.current_backup_file}")  
+    }
+    while db_thread.alive?
+      puts "#{self.current_backup_file_size} MB so far..."
+      sleep(0.5)
+    end
+
+    puts "Finished with #{self.current_backup_file_size} MB"
+    
+  end
+
+  def host
+    self.config["host"]
+  end
+
+  def password
+    self.config["password"]
+  end
+
+  def remove_current_backup_file
+    if File.exists?(self.current_backup_file)
+      FileUtils.rm_rf(self.current_backup_file)
+    end
+  end
+
+  def username
+    self.config["username"]
+  end
+
+end
+
+opts = Trollop::options do 
+  opt :environment, "Rails Environment to use", :default => "development"
+  opt :backup_dir, "Location to put files", :default => "/db/backups"
+end
+
+BackupDatabase.run(opts)
+

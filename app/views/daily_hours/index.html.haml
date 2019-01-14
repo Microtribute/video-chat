@@ -1,0 +1,27 @@
+:javascript
+  $(DailyHoursIndex.initialize)
+- if current_user.is_lawyer? && current_user.is_online
+  %h3.lawyer_notice You are now shown as available by video chat. Keep this window open to remain available.
+%div#page
+  %div
+    .profile
+      = render(:partial =>  "lawyer/menu", :locals => {:lawyer => @lawyer})
+      .profile-block.same_height
+        = form_tag(user_daily_hours_path(:user_id => @lawyer.id), :method => :put, :id => "user_daily_hours") do
+          %ul
+            - (0..6).each do |wday|
+              - # using on_wday didn't work here because it's not always 
+              - # a real association collection
+              - daily_hour = @daily_hours.select{|dh| dh.wday == wday}.first
+              %li{:class => cycle("white", "gray")}
+                %b #{Date::DAYNAMES[wday]}
+                #{daily_hours_time_select("start_time", wday)}
+                to
+                #{daily_hours_time_select("end_time", wday)}
+                - if daily_hour.present? && daily_hour.errors.present?
+                  %div.error
+                    #{daily_hour.errors.full_messages.join(", ")}
+
+            %li.last
+              %button.button{:type => "submit"}
+                Save

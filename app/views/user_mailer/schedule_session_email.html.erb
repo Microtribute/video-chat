@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+    <br />
+    <p>
+      A client, <%= @user.full_name %>, has sent you the following message on Lawdingo:<br/>
+    </p>
+    <hr />
+    <p>
+      <%= simple_format(@msg.gsub(/\n/, '<br />')) %>
+    </p>
+    <hr />
+    <p>You can reply directly to <%= @user.full_name %> about scheduling a time to connect on Lawdingo at <%= @user.email %>.</p><br/>
+    Thanks,<br/>
+    Team Lawdingo,<br/>
+    <a href ="mailto:info@lawdingo.com">info@lawdingo.com</a>,<br/>
+    415-234-3464
+    </p>
+  </body>
+</html>
+

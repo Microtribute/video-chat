@@ -1,0 +1,27 @@
+.framey-video {
+  &>div:first-child {
+    padding: 30px 60px;
+    font-size: 1.4em;
+
+    .recorder-wrapper,
+    .player-wrapper {
+      text-align: center;
+      display: block;
+      position: relative;
+      margin: 2em 0;
+    }
+
+    .controls {
+      display: block;
+      margin: 2em 0;
+
+      .notice {
+        display: block;
+        line-height: 1.5;
+        margin-top: 0.5em;
+        font-size: 0.75em;
+        color: #888;
+      }
+    }
+  }
+}

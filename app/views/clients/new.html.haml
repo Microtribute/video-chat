@@ -1,0 +1,28 @@
+#page.apply-form-wrapper
+  - if params[:lawyer_path].present?
+    - @lawyer = Lawyer.find(params[:lawyer_path])
+    - if params[:notice].present? && @lawyer.present?
+      = notice text: "To connect with #{@lawyer.full_name}, simply sign up or sign in with Lawdingo.", |
+        avatar: @lawyer.photo                                                                          |
+  - if params[:question_notice].present?
+    = notice text: "To submit that inquiry please sign up with or log in to Lawdingo."
+  - if params[:appointment_with].present?
+    - @lawyer = Lawyer.find(params[:appointment_with].to_i)
+    - if @lawyer.present?
+      = notice text: "To make an appointment with #{@lawyer.full_name}, please sign up with or log in to Lawdingo.", |
+        avatar: @lawyer.photo                                                                                        |
+
+  %div.outer
+    %h1.form-header Who are you?
+    .process-wrapper.users_apply
+      .process_notice
+        %h3
+          Already a Lawdingo member?
+          = link_to("Log in", login_path(session[:return_to]))
+          now.
+      .apply-form
+        = render(:partial =>'/users/form', :locals => {:user => @client})
+    .user_notice
+      %h5
+        = image_tag('new_lawyer_icon.png')
+        Lawyer? #{link_to "Apply here", new_lawyer_path}.

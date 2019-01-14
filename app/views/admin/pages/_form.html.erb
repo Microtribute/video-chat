@@ -1,0 +1,42 @@
+
+<% errors = @page.errors %>
+<%= form_for [:admin, @page] do |f| %>
+  <% if @page.errors.size > 0 %>
+    <div style="border: 1px solid red;padding: 5px;margin: 10px 10px 20px 100px;width: 500px;">
+      The following errors prevented from saving page <br/>
+      <ul>
+        <% errors.full_messages.each{|error| %>
+          <li><%= error %></li>
+        <% } %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="f_label"> Name : </div>
+  <%= f.text_field :name %> <br/>
+
+  <div class="f_label">Title:</div>
+  <%= f.text_field :page_title %><br/>
+
+  <div class="f_label">Page Header:</div>
+  <%= f.text_field :page_header %><br/>
+
+  <div class="f_label">content: </div>
+  <%= f.text_area :content, :size =>"100x40" %> <br/>
+
+  <div style="margin: 10px 10px 10px 270px;">
+    <%= f.submit @page.new_record? ? 'Add Page' : 'Update Page' %>
+    &nbsp; &nbsp; or &nbsp; <%= link_to "Cancel", root_path %>
+  </div>
+
+<% end %>
+<style type="text/css">
+  div.f_label{
+    height: 15px;
+    width: 250px;
+    padding: 2px;
+    float:left;
+    text-align: right;
+    margin-right: 15px;
+  }
+</style>

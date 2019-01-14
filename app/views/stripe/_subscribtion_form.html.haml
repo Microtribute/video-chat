@@ -1,0 +1,64 @@
+= raw flash[:error]
+- errors = @lawyer.errors
+= form_for(@lawyer, :url => subscribe_lawyer_path, :html => {:id => :new_subscription}) do |f|
+	- unless flash[:error]
+		- if errors.size > 0
+			.error_explanation
+				%h4.error Please fix the following errors:
+				%ul.errors
+					- errors.full_messages.each do |error|
+						%li= error		
+	%table
+		%tbody
+			%tr
+				%td.labels Email: 
+				%td= f.text_field :email, :class => :email, :readonly => :readonly
+			%tr
+				%td Accepted cards:
+				%td.cards
+					= image_tag('visa_icon.png')
+					= image_tag('mc_icon.png')
+					= image_tag('ae_icon.png')
+					= image_tag('discover_icon.png')
+			- if @lawyer.stripe_card_token.present?
+				%tr
+					%td
+					%td= label_tag :card, 'Credit card has been provided.'
+			- else
+				%tr
+					%td Credit card number:
+					%td= text_field_tag :card_number, nil, name: nil, :required => :required, :validate => true
+				%tr
+					%td Expires on:
+					%td                                
+						= select_month nil, {add_month_numbers: true}, {name: nil, id: "card_month", :required => :required, :validate => true}
+						= select_year nil, {start_year: Date.today.year, end_year: Date.today.year+15}, {name: nil, id: "card_year", :required => :required, :validate => true}
+				%tr
+					%td CVV Code:
+					%td
+						= text_field_tag :card_code, nil, name: nil, :required => :required, :validate => true
+						%a.cvv-info{:href => '#'}
+				%tr
+					%td 
+						Promo code: 
+						%br/
+						(optional)
+					%td
+						= text_field_tag :coupon, nil, name: nil
+						%a.gray_button{:href => '#'} Apply
+					
+			%tr
+				%td
+				%td.buttons
+					= f.submit 'Submit', :class=>"button", id: "submit_subscribe"
+					%span#siteseal
+						%script{:type=>"text/javascript", :src => 'https://seal.godaddy.com/getSeal?sealID=DY6qS9Z5Yb3G0eASdQ2SOHDc5j8MndNNTbTEvYzffdVwSYY0hv2'}
+			%tr
+				%td
+				%td.card_notice Your card will not be charged once your bar membership is verified.
+      
+  
+
+#stripe_error
+	%noscript
+		JavaScript is not enabled and is required for this form. First enable it in your web browser 

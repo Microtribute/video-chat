@@ -1,0 +1,7 @@
+%ul.share
+	%li.facebook
+		.fb-like{'data-href' => attorney_url(@attorney, slug: @attorney.slug), 'data-send' => :false, 'data-layout' => :button_count, 'data-width' => 50, 'data-show-faces' => :false}
+	%li.linkedin
+		%script{:type => "IN/Share"}
+	%li.twitter
+		%a{href: 'https://twitter.com/share', class:'twitter-share-button', 'data-show-count' => 'false', 'data-url' => attorney_url(@attorney, slug: @attorney.slug), 'data-text' => "Attorney #{@attorney.full_name} on Lawdingo - Get legal advice online.", 'data-count' => "none"}

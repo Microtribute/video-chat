@@ -1,0 +1,12 @@
+
+<% if @conversation %>
+  Review the session you just had with Attorney <b> <%= @conversation.lawyer.full_name %> </b>
+
+
+
+
+
+  <br/><%= link_to "Skip Review", conversation_summary_path(@conversation), :title =>'Leave without giving any review!'  %>
+<% else %>
+  Nothing to show!
+<% end %>

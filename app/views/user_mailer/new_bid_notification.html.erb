@@ -1,0 +1,7 @@
+<%= content_tag :h1, "Bid ##{@bid.id} submitted by #{@bid.lawyer.full_name}" %>
+
+<h2>Question</h2>
+<%= simple_format @bid.inquiry.question.body %>
+<%= simple_format @inquiry_url %>
+
+<%= content_tag :h2, "#{@bid.lawyer.full_name}, #{number_to_currency @bid.amount}" %>

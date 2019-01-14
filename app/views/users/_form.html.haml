@@ -1,0 +1,151 @@
+.form-inner
+  = raw flash[:error]
+  
+  = form_for user, :validate => true, :html=>{:multipart => true} do |f|
+    - unless flash[:error]
+      
+      - if user.errors.size > 0
+        
+        .error_explanation
+          
+          %h4.error Please fix the following errors:
+          %ul.errors  
+            - user.errors.full_messages.each do |error|
+              %li= error
+
+    %table.user_info_form
+      %tbody
+        %tr
+          %td.labels Your name:
+          %td.name_fields 
+            = f.text_field :first_name ,{:placeholder=>"First Name",:class=>"name"}
+            = f.text_field :last_name ,{:placeholder=>"Last Name",:class=>"name"}
+        %tr
+          %td.labels Email:
+          %td.email_field= f.text_field :email, :validate => true, :placeholder=>"Email Address", :class=>"email", title: "Your email address.", rel: "twipsy"
+        %tr
+          %td.labels Password:
+          %td.pass_field= f.password_field :password, :placeholder=>"Password", :class=>"passw", title: "A password.", rel: "twipsy"
+        
+        - if user.is_lawyer?
+          
+          %tr
+            %td.labels Bar membership(s):
+            %td
+              #div_states_barids
+              %a#barids_editor.dialog-opener.edit_gray{:href => "#bar_membership"} (edit)
+              %a#barids_opener.dialog-opener.blue_button.gray.no-inner-shadow{:href => "#bar_membership", :style => "width: 13em; text-align: center;"} State Bar Membership(s)
+          %tr
+            %td.labels Practice areas:
+            %td
+              #div_practice_areas
+              %a#practice_areas_editor.dialog-opener.edit_gray{:href => "#practices"} (edit)
+              %a#practice_areas_opener.dialog-opener.blue_button.gray.no-inner-shadow{:href => "#practices", :style => "width: 11.3em; text-align: center;"} Your Practice Areas
+          %tr
+            %td.labels Free consultation offered:
+            %td           
+              .user_free_consultation_duration
+                = f.select(:free_consultation_duration, [ |
+                    ["2 minutes", "2"],                   |
+                    ["5 minutes", "5"],                   |
+                    ["10 minutes", "10"],                 |
+                    ["15 minutes", "15"],                 |
+                    ["20 minutes", "20"],                 |
+                    ["30 minutes", "30"],                 |
+                    ["45 minutes", "45"],                 |
+                    ["60 minutes", "60"],                 |
+                    ["90 minutes", "90"],                 |
+                  ], selected: 20)                        |
+                %span.duration_hint free consultation offered                                                 
+          %tr
+            %td.labels Hourly rate:
+            %td.rate_field
+              - user.rate = nil if user.new_record?
+              = f.text_field :rate, :class=>"paypal", :placeholder => "Hourly rate", title: "Your hourly rate is quoted to clients as a per-minute rate.", rel: "twipsy"
+              %span.rate_hint Will be quoted by the min.
+          %tr
+            %td.labels Direct phone number:
+            %td= f.text_field :phone, :placeholder => "Your direct phone number", title: "To receive clients by phone, enter your direct phone line here.", rel: "twipsy"
+
+          %tr
+            %td Time Zone:
+            %td= f.time_zone_select( :time_zone, ActiveSupport::TimeZone.us_zones, :default => "Pacific Time (US & Canada)")
+          %tr
+            %td.labels Professional summary:
+            %td= f.text_area :personal_tagline, :placeholder=>"Professional summary (2000 chars)", :class=>"summary", :maxlength => 2000, :rows => 2, title: "A brief description of your personal credentials and focal practice areas.", rel: "twipsy"
+          %tr
+            %td.labels Profile Photo:
+            %td
+              .file_select_wrapper
+                .file_select_button.blue_button.gray.no-inner-shadow
+                  %ins Add your photo
+                  = f.file_field :photo, :accept => 'image/png,image/gif,image/jpeg'
+                %span.file_select_value
+          - i = 0
+          #bar_membership.dialog-window
+            %h3 In which state are you licensed to practice law?
+            %div
+              %ul#leveled_list_bar_ids.leveled-list
+                = f.fields_for :bar_memberships do |bar_membership_fields|
+                  - if bar_membership_fields.object.new_record?
+                    %li{:id => i}
+                      = check_box_tag("states_#{i}", @states[i].id, false, :id => "state_#{i}", :onchange =>"javascript:select_unselect_state('#{i}');")
+                      = label_tag "state_#{i}", @states[i].name
+                      = bar_membership_fields.hidden_field :state_id
+                      .sub{:id => @states[i].name}
+                        = "#{@states[i].abbreviation} Bar ID:"
+                        = bar_membership_fields.text_field :bar_id
+                    - i += 1
+                - j = 0
+                = f.fields_for :bar_memberships do |bar_membership_fields|
+                  - unless bar_membership_fields.object.new_record?
+                    %li{:id => i + j}
+                      = check_box_tag("states_#{i + j}", @filled_states[j].id, true, :id => "state_#{i+j}", :onchange =>"javascript:select_unselect_state('#{i+j}');")
+                      = label_tag "state_#{i+j}", @filled_states[j].name
+                      = bar_membership_fields.hidden_field :state_id
+                      .sub{:id => @filled_states[j].name}
+                        = "#{@filled_states[j].abbreviation} Bar ID:"
+                        = bar_membership_fields.text_field :bar_id
+                    - j += 1
+            %a.button.blue{:onclick => "setBarIds();", :style => "width: 100px; text-align: center;"} Done
+          #practices.dialog-window
+            %h3 What are your practice areas? Click any to expand.
+            %div
+              %ul#leveled-list_practice_areas.leveled-list
+                - PracticeArea.parent_practice_areas.order(:name).each do |p|
+                  %li
+                    %input.parent-area{"data-id" => p.id, "data-name" => p.name, :id => "practice_area_#{p.id}", :name => "lawyer[practice_area_ids][]", :type => "checkbox", :value => p.id}/
+                    = label_tag "practice_area_#{p.id}", p.name
+                    .sub{"data-parent-id" => p.id}
+                      = p.name
+                      specialities:
+                      %ul
+                        - p.specialities.order(:name).each do |s|
+                          / li><haml:loud> check_box_tag &amp;quot;practice_areas[]&amp;quot;, &amp;quot;#{s.id}&amp;quot; </haml:loud> <haml:loud> s.name </haml:loud> </li
+                          %li
+                            %input{"data-name" => s.name, :id => "practice_area_#{s.id}", :name => "lawyer[practice_area_ids][]", :type => "checkbox", :value => s.id}/
+                            = label_tag "practice_area_#{s.id}", s.name
+            %a.button.blue{:onclick => "setPracticeAreas();", :style => "width: 100px; text-align: center;"} Done      
+        %tr
+          %td
+          %td= f.submit user.is_lawyer? ? (user.new_record? ? 'Apply as a Lawyer' : 'Update Account') : (user.new_record? ? 'Join Lawdingo' : 'Update Account'), :class=>"button", id: "submit_signup"
+        %tr
+          %td
+          %td
+            .form-notice
+              - if params[:ut].present?
+                %span.fine-print
+                  By clicking "Join Lawdingo" you confirm that you accept the
+                  %a{:href => "/terms", :target => "_blank"} Terms of Service
+              - else
+                %span.fine-print
+                  By clicking "Apply as Lawyer" you confirm that you accept the
+                  %a{:href => "/terms", :target => "_blank"} Terms of Service
+    
+:javascript
+  $(document).ready(function(){
+    $('#barids_editor').hide();
+    $('#div_states_barids').hide();
+    $('#practice_areas_editor').hide();
+    $('#div_practice_areas').hide();
+  });

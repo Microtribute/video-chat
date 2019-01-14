@@ -1,0 +1,2 @@
+module SolrSearchHelper
+end

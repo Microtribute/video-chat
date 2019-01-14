@@ -1,0 +1,61 @@
+<script src="https://staging.tokbox.com/v0.91/js/TB.min.js" type="text/javascript" charset="utf-8"></script>
+<div style="width:1000px; height:410px; position: relative; margin: 25px auto 50px auto;">
+<% if @lawyer %>
+  <script>
+  	var apiKey = <%=@api_key%>;
+    var sessionId = '<%=@lawyer.tb_session_id %>';
+    var token = '<%=@lawyer.tb_token %>';
+  	var lawyer_id = "<%=@lawyer.id%>";
+  	var is_chat_session_page = true;
+  	var g_conversation_id = "<%=@conversation_id%>";
+  </script>
+  <%
+  	#current_user LAWYER CLIENT
+	if !current_user.is_lawyer?
+	  %>
+		<script type="text/javascript"> var is_lawyer = false;</script>
+		<%= render :partial => "sound_player" %>
+		<div id="opentok_ready" style="background: url('<%= @lawyer.photo.url(:thumb) %>') no-repeat center center;" class="client_session">
+			<%= image_tag image_path 'avatar_round_middle.png' %>
+			<%= image_tag image_path('loading_dots.gif'), :class => :loading_dots %>
+			<p>Please wait while we try contact the lawyer</p>
+			<div id="opentok_buttons">
+			    <input id="opentok_resume" type="button" value="Resume" onclick="location.reload();" />
+			    <input id="opentok_cancel" type="button" value="Cancel" onclick="fn_cancel_lawyer(); location.replace('<%=attorney_url(@lawyer, slug: @lawyer.slug) %>');" />
+			</div>
+		</div>
+	  
+	  <%
+	else
+		%>
+		<script type="text/javascript"> var is_lawyer = true;</script>
+		<%= render :partial => "sound_player" %>
+		<div id="opentok_ready">
+			<div id="opentok_buttons">
+			    <input id="opentok_accept" type="button" value="Accept" onclick="fn_accept_invite();" />
+			    <input id="opentok_decline" type="button" value="Decline" onclick="fn_decline_invite();" />
+			</div>
+		</div>
+		<%
+	end
+  %>
+  <%#= link_to "End Session", new_conversation_path  %>
+  <%= render :partial => "flash_player" %>
+<% else %>
+  No one to chat with!
+<% end %>
+
+	<div id="video_window">
+		<div id="opentok_console"></div>
+		<div id="links">
+	       	<input type="button" value="Start" id ="connectLink" onClick="javascript:connect()" />
+	       	<input type="button" value="Stop" id ="disconnectLink" onClick="javascript:disconnect()" />
+	       	<!--<input type="button" value="Start Publishing" id ="publishLink" onClick="javascript:startPublishing()" />
+	       	<input type="button" value="Stop Publishing" id ="unpublishLink" onClick="javascript:stopPublishing()" />-->
+		</div>
+		<div id="subscribers">
+			<div id="myCamera" class="publisherContainer"></div>
+		</div>
+	</div>
+
+</div>

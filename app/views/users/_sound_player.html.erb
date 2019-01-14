@@ -1,0 +1,33 @@
+<!-- object type="application/x-shockwave-flash" data="/sounds/dewplayer.swf?mp3=/sounds/phone-calling-1.mp3" width="1" height="1" id="dewplayer"><param name="wmode" value="transparent" /><param name="movie" value="/sounds/dewplayer.swf?mp3=/sounds/phone-calling-1.mp3&autoplay=true" />
+<param name="flashvars" value="showtime=true&autoplay=true&autoreplay=true&xml=playlist.xml" />
+</object-->
+<script type="text/javascript" src="/sounds/swfobject.js"></script>
+
+<div id="dewplayer_wrapper">
+<div id="dewplayer_content"></div>
+</div>
+
+<script type="text/javascript">
+var g_swf;
+var fn_play_ring=function(){
+    var flashvars = {
+      mp3: "/sounds/phone-calling-1.mp3",
+      autoreplay:true,
+      autoplay:true
+    };
+    var params = {
+      wmode: "transparent"
+    };
+    var attributes = {
+      id: "dewplayer"
+    };
+    g_swf = swfobject.embedSWF("/sounds/dewplayer.swf", "dewplayer_content", "1", "1", "9.0.0", false, flashvars, params, attributes);
+
+}
+
+var fn_stop_ring=function(){
+    $('#dewplayer_wrapper').html('<div id="dewplayer_content"></div>');
+
+}
+</script>
+

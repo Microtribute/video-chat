@@ -1,0 +1,100 @@
+<html lang="en">
+<head>
+	<title>jQuery UI Dialog - Basic modal</title>
+	<link type="text/css" href="sub/dialog/themes/base/ui.all.css" rel="stylesheet" />
+	<link type="text/css" href="sub/dialog/dialog.css" rel="stylesheet" />
+	<link type="text/css" href="sub/common.css" rel="stylesheet" />
+	
+	<script type="text/javascript" src="sub/jquery-1.3.2.min.js"></script>
+	<script type="text/javascript" src="sub/jquery.cookie.js"></script>	
+	
+	<script type="text/javascript" src="sub/dialog/ui/ui.core.js"></script>
+	<script type="text/javascript" src="sub/dialog/ui/ui.draggable.js"></script>
+	<script type="text/javascript" src="sub/dialog/ui/ui.resizable.js"></script>
+	<script type="text/javascript" src="sub/dialog/ui/ui.dialog.js"></script>
+	<script type="text/javascript" src="sub/dialog/external/bgiframe/jquery.bgiframe.js"></script>
+	
+	<script src="sub/common.js"></script>
+	
+	
+</head>
+<body oncontdextmenu="return false" scroll="no">
+
+	<div id="loginWindow" title="Login">
+		<p><label class="caption" for="useremail">User name:</label><input value="" type="text" class='txt_info' id="useremail" /></p>
+		<p><label class="caption" for="password">Password:</label><input value="" type="password" class='txt_info' id="password" /></p>
+		<p align="right">
+			<input type="button" value="Test" id="" style="display:none;" onclick="fn_play_ring();">
+			<input type="button" value="Login" id="btnLogin" onclick="fn_login();" />
+			<input type="button" value="Cancel" id="btnCancl_login" onclick="fn_cancel_login();" />
+		</p>
+	</div>
+	<div id="unloggedScreen" title="Information">
+		<p>Sorry, but you are not logged in.</p>
+		<p>Please log in by clicking <a href="javascript:fn_open_loginWindow_from_unloggedScreen();">here</a>.</p>
+		<p><br /></p>
+	</div>
+	
+	<div id="settingWindow" title="Setting">
+		<p><input type='radio' name='isAppear' id='rdoAppear'/><label for='rdoAppear'>Appear available for video chat</label></p>
+		<p><input type='radio' name='isAppear' id='rdoNoAppear'/><label for='rdoNoAppear'>Don`t appear available for video chat</label></p>
+		<p align="right">
+			
+			<input type="button" value="Apply" id="btnApply" onclick="fn_apply_setting();" />
+		</p>
+	</div>
+	
+	<div id="acceptWindow" title="Confirmation">
+		<p align="center">
+			<input type="button" value="Accept" id="btnAccept" onclick="fn_accept_call();" />
+			<input type="button" value="Deline" id="btnDecline" onclick="fn_decline_call();" />
+		</p>
+	</div>
+
+	<form id="myForm" name="myForm" method="post" action="http://www.lawdingo.com/sessions" target="new_lawdingo">
+		<input type=hidden name="email" value="" />
+		<input type=hidden name="password" value="" />
+	</form>
+	<input type="button" style="position:absolute;top:-1000px;" id="btnPopup">
+	<input type="button" stylde="position:absolute;top:-1000px;" id="btnShowApp" value="Pending">
+
+
+
+		<script type="text/javascript" src="/sounds/swfobject.js"></script>
+
+		<div id="dewplayer_wrapper">
+			<div id="dewplayer_content"></div>
+		</div>
+
+		<script type="text/javascript">
+		var g_swf;
+		var fn_play_ring=function(){
+			try{
+			    var flashvars = {
+			      mp3: "/sounds/phone-calling-1.mp3",
+			      autoreplay:true,
+			      autoplay:true
+			    };
+			    var params = {
+			      wmode: "transparent"
+			    };
+			    var attributes = {
+			      id: "dewplayer"
+			    };
+			    g_swf = swfobject.embedSWF("/sounds/dewplayer.swf", "dewplayer_content", "1", "1", "9.0.0", false, flashvars, params, attributes);
+
+
+			}catch(e){
+
+			}
+		}
+
+		var fn_stop_ring=function(){
+		    $('#dewplayer_wrapper').html('<div id="dewplayer_content"></div>');
+
+		}
+		</script>
+
+
+</body>
+</html>

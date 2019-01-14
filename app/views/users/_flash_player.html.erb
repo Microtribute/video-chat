@@ -1,0 +1,17 @@
+<script src="https://staging.tokbox.com/v0.91/js/TB.min.js" type="text/javascript" 
+  charset="utf-8"></script>
+  <% #stylesheet_link_tag "tokbox" %>
+  
+  <div id="opentok_console"></div>
+  <div id="links">
+        <input type="button" value="Start Session" class="btn btn-large btn-primary" id ="connectLink" onClick="javascript:connect()" />
+        <input type="button" value="End Session"  class="btn btn-large hide" id ="disconnectLink" onClick="javascript:disconnect()" />
+  </div>
+
+  <div id="subscribers">
+    <div id="myCamera" class="publisherContainer"></div>
+  </div>
+
+  <script>
+    //show('connectLink');
+  </script>

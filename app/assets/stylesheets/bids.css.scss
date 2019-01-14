@@ -1,0 +1,148 @@
+form.new_bid {
+  position: relative;
+  display: block;
+  margin-top: 1.4em;
+
+  label {
+    display: inline-block;
+    margin-right: 0.6em;
+    color: #3f3f3f;
+  }
+
+  .hint {
+    display: block;
+    font-size: 0.95em;
+    margin: 0.3em 0.1em 0 7.8em;
+    color: #c3c3c3;
+  }
+
+  input[type="submit"] {
+    margin-top: 1em;
+  }
+
+  input#bid_amount {
+    font-family: arial, verdana, tahoma;
+    border: 1px solid #B8B8B8;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    outline: none;
+    padding: 8px;
+    width:200px;
+  }
+
+  .countdown-wrapper {
+    position: absolute;
+    top: 0.7em;
+    left: 340px;
+    label{
+      color:#c3c3c3;
+    }
+    .countdown, .label {
+      display: inline;
+    }
+  }
+}
+
+.closed-biding-label {
+    font-size: 2.125em;
+    text-transform: uppercase;
+    font-family: monospace;
+    color: #C00;
+    font-weight: 600;
+    display: block;
+    margin: 1.25em 0 0 0;
+    opacity: 0.8;
+}
+
+#card_details {
+  display: block;
+  position: relative;
+  margin-top: 2em;
+  background-color: #ececec;
+  width: 96%;
+  padding: 10px 8px 45px 15px;
+  border-radius: 4px;
+  float:left;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  #stripe_error {
+    display: inline-block;
+    margin-bottom: 1em;
+    color: #C00;
+    font-family: monospace;
+    font-size: 0.85em;
+    text-transform: uppercase;
+  }
+
+  .sealed {
+    position: absolute;
+    bottom: 12px;
+  }
+
+  p.description {
+    font-size: 15px !important;
+    margin: 0 0 1em 0;
+    color:#404040 !important;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 0.25em;
+    margin-left: 0.15em;
+    color: #5d5e5f;
+    float: left;
+    margin-top: 8px;
+  }
+  select{
+    font-size:13px;
+    color:#404040;
+    height:26px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    overflow: hidden;
+    border:0;
+    padding: 0 26px 0 10px;
+  }
+  select#card_month{
+    background:url('bid_month_select_bg.png') no-repeat;
+    margin-left: 26px;
+    width:147px;
+  }
+  select#card_year{
+    background:url('bid_year_select_bg.png') no-repeat;
+    width:100px;
+    margin-left:20px;
+  }
+  .input {
+    display: block;
+    margin: 0 0 0.75em 0;
+    float: left;
+
+    input[type="text"] {
+      font-family: arial, verdana, tahoma;
+      border: 1px solid #B8B8B8;
+      border-radius: 4px;
+      -moz-border-radius: 4px;
+      -webkit-border-radius: 4px;
+      outline: none;
+      padding: 8px;
+      float: left;
+      width: 145px;
+    }
+    input[type="text"]#card_number{
+      margin-right:30px;
+      width: 129px;
+    }
+    input#card_code {
+      width: 60px !important;
+    }
+  }
+  .input.collection{
+    label{
+      margin-top:5px;
+    }
+  }
+}

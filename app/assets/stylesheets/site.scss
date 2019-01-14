@@ -1,0 +1,99 @@
+@mixin rounded( $radius: 10px) {
+  border-radius: $radius;
+  -moz-border-radius: $radius;
+  -webkit-border-radius: $radius;
+}
+
+html, body {
+    padding: 0px;
+    margin: 0px;
+    font-family: arial, verdana, tahoma;
+    font-size: 10px;
+}
+
+body {
+}
+
+img {
+    border: none;
+    vertical-align: middle;
+}
+
+ul {
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+}
+
+a {
+    border-bottom:1px dotted #000;
+    color:#303030;
+    text-decoration: none;
+    &:hover { border-bottom: 0; }
+}
+a.dialog-opener{
+  border-bottom:0;
+}
+h1 a, h2 a, h3 a, h4 a, h5 a{
+  color: #2491ff;
+  border:none;
+}
+.clear {
+    clear:both !important;
+    margin:     0px !important;
+    padding:    0px !important;
+    width:      0px !important;
+    height:     0px !important;
+}
+.dummy-input { color: #b8b8b8 !important; }
+
+.help-text {
+    display: inline-block;
+    vertical-align: middle;
+    border: none;
+    cursor: help;
+    position: relative;
+    width: 18px;
+    height: 18px;
+    background: image-url('question.png') no-repeat center center transparent;
+    &:hover:after {
+        content: attr(tooltip);
+        display: block;
+        background-color: #000;
+        opacity: 0.5;
+        -moz-opacity: 0.5;
+        -webkit-opacity: 0.5;
+        filter: Alpha(opacity=50);
+        @include rounded( 4px );
+        padding: 4px 8px;
+        width: 130px;
+        text-align: center;
+        color: #fff;
+        position: absolute;
+        right: -146px;
+        top: 8px;
+    }
+}
+
+#paid_schedule_session {
+  height: auto;
+  letter-spacing: 0.05em;
+  margin-left: -205px;
+  margin-top: -150px;
+  width: 350px;
+}
+.dialog-window > div#security_wrapper {
+  height: auto;
+}
+#exp_group {
+  float: left;
+  width: 135px;
+}
+#clear_data_search{
+  position: absolute;
+  margin-left: 160px;
+  margin-top: 32px;
+  border-bottom: 0px;
+  cursor: pointer;
+  z-index:10;
+}

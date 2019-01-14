@@ -1,0 +1,45 @@
+<% options_practice_areas = []
+   options_practice_areas << ['none', nil]
+   @parent_practice_areas.order(:name).each { |pa|
+    options_practice_areas << [pa.name, pa.id]
+  }
+%>
+<% errors = @practice_area.errors %>
+<%= form_for [:admin, @practice_area] do |f| %>
+  <% if @practice_area.errors.size > 0 %>
+    <div class="error_explanation">
+      The following errors prevented from creating account <br/>
+      <ul>
+        <% errors.full_messages.each{|error| %>
+          <li><%= error %></li>
+        <% } %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="f_label"> Name : </div>
+  <%= f.text_field :name %> <br/>
+
+  <div class="f_label"> Parent : </div>
+  <%= f.select :parent_id, options_for_select(options_practice_areas, selected=@practice_area.parent_id) %> <br />
+
+  <div class="f_label"> National? : </div>
+  <%= f.check_box :is_national %> <br />
+
+  <div style="margin: 10px 0px 10px 270px;">
+    <%= f.submit @practice_area.new_record? ? 'Create new Practice Area' : 'Update Practice Area' %>
+    &nbsp; &nbsp; or &nbsp; <%= link_to "Cancel", root_path %>
+  </div>
+
+<% end %>
+<style type="text/css">
+  div.f_label{
+    height: 15px;
+    width: 250px;
+    padding: 5px;
+    float:left;
+    text-align: right;
+    margin-right: 15px;
+  }
+</style>
+

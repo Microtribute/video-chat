@@ -1,0 +1,125 @@
+.questions-wrapper {
+  width: 70%;
+  margin: 0 auto;
+  font-size: 1.4em;
+
+  form.simple_form {
+    .input {
+      position: relative;
+      min-width: 400px;
+
+      &.string input,
+      &.text textarea {
+        width: 300px;
+        font-family: arial, verdana, tahoma;
+        border: 1px solid #B8B8B8;
+        border-radius: 4px;
+        -moz-border-radius: 4px;
+        -webkit-border-radius: 4px;
+        font-size: 1em;
+        padding: 8px;
+      }
+
+      &.text {
+        width: 400px;
+      }
+
+      .hint {
+        display: inline-block;
+        width: 100%;
+        font-size: 12px;
+      }
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      word-spacing: nowrap;
+    }
+
+    .input {
+      margin-bottom: 1em;
+    }
+
+    textarea#question_body {
+      height: 60px;
+    }
+
+    .actions {
+      .status {
+        color: #f33;
+      }
+    }
+  }
+}
+
+ul.questions {
+  display: block;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+
+  li {
+    display: block;
+    width: 100%;
+    position: relative;
+
+    .date {
+      color: #f33;
+      font-size: 0.875em;
+      font-weight: bold;
+      line-height: 1;
+      display: block;
+    }
+
+    a.block-link {
+      border-bottom: 1px solid #e8e8e8;
+      display: block;
+      overflow: hidden;
+      padding: 20px;
+      text-decoration: none;
+      color: black;
+
+      &:hover {
+        text-decoration: none;
+        background: #F6F6F6;
+        text-shadow: 0 1px white;
+        z-index: 1;
+      }
+
+      &:active {
+        background: #E7E7E7;
+        text-shadow: 0 1px 1px white;
+        -webkit-box-shadow: inset 0 5px 13px -7px rgba(0,0,0,0.18),inset 0 -5px 13px -7px rgba(0,0,0,0.18);
+        -moz-box-shadow: inset 0 5px 13px -7px rgba(0,0,0,0.18),inset 0 -5px 13px -7px rgba(0,0,0,0.18);
+        box-shadow: inset 0 5px 13px -7px rgba(0,0,0,0.18),inset 0 -5px 13px -7px rgba(0,0,0,0.18);
+        z-index: 2;
+        cursor: default;
+      }
+    }
+  }
+
+  .odd {
+    background-color: #f2fafc;
+  }
+
+  .id {
+    position: absolute;
+    color: #999;
+    top: 20px;
+    right: 20px;
+    font-family: monospace;
+  }
+}
+
+#send_to_lawyers {
+  border-top: 1px solid #CCC;
+  margin-top: 1.4em;
+  padding: 0 3px;
+  width: 45%;
+
+  button {
+    font-size: 16px;
+    line-height: 20px;
+  }
+}

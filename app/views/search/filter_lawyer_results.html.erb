@@ -1,0 +1,27 @@
+<div class="question-container">
+  <%= render partial: "questions/form", locals: { type: @type } %>
+</div>
+
+<% if @lawyers.blank? %>
+  <div class="selected-lawyers-caption">
+    <%= selected_lawyers_caption %>
+  </div>
+<% else %>
+  <div class="selected-lawyers-caption">
+    <%= selected_lawyers_caption %>
+  </div>
+<% @lawyers.each{|lawyer| %>
+  <%= render :partial =>'/lawyer/lawyer', :locals=>{:lawyer =>lawyer} %>
+<% } %>
+
+<% end %>
+<script>
+$('.dialog-opener').dialog();
+$ (".action .rating").raty({
+    path: "/assets/raty",
+    hintList: ['', '', '', '', '', ''],
+    readOnly: true,
+    start: function() {return $(this).data("score")}
+})
+</script>
+

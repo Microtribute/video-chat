@@ -1,0 +1,40 @@
+<div class="signup" id="page">
+  <% if params[:lawyer_path].present? %>
+    <% @lawyer = Lawyer.find(params[:lawyer_path]) %>
+    <% if @lawyer %>
+      <%= notice text: "To connect with #{@lawyer.full_name}, simply sign up or sign in with Lawdingo.", 
+        avatar: @lawyer.photo %>
+    <% end %>
+  <% end %>
+
+  <% if @question_notice %>
+    <%= notice text: "To submit that inquiry please sign up with or log in to Lawdingo." %>
+  <% end %>
+
+  <h1 class="form-header">Log In</h1>
+  <div class="form-wrapper">
+  <%= form_tag sessions_path, :validate => true do %>
+    <div class="form-inner">
+      <% if @msg %>
+        <div class="error_explanation">
+          <h4 class="error">Incorrect email or password.</h4>
+        </div>
+      <% end %>
+
+      <%= text_field_tag :email, params[:email], :placeholder=>"Email address" ,:class=>"email" %>
+      <%= password_field_tag :password ,nil ,:placeholder=>"Password" ,:class=>"passw" %>
+    </div>
+
+    <div class="actions" style="margin: 0 !important;">
+      <div class="form-inner" style="padding: 20px 45px;">
+        <%= submit_tag 'Log In', id: "submit_login", class: "button" %><p><%= link_to "forgot password?", new_password_reset_path %></p>
+      </div>
+    </div>
+  <% end %>
+  </div>
+
+  <div class="form-wrapper signin">
+    <p>New to Lawdingo? <%= link_to "Sign up", new_client_path %> now.</p>
+  </div>
+</div>
+

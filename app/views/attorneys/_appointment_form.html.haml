@@ -1,0 +1,51 @@
+.appointment-form{:id => "appointment_form_#{lawyer.id}"}
+  .message{:style => "display:none"}
+  %form{:action => appointments_path, :method => "POST"}
+    %h2 Schedule a consultation with #{lawyer.full_name}
+
+    %div.error{:style => "display:none"}
+
+    %p Available appointments (select one)
+
+    %div.available-appointments
+      - lawyer.next_available_days(4).each_with_index do |d, i|
+        %ul
+          %li.title
+            %a.appointment-time{:href => '#', :class => "day-#{i}"} 
+              - if d === Date.today
+                Today
+              - elsif d === Date.tomorrow
+                Tomorrow
+              - else 
+                #{d.strftime("%a, %m/%d")}
+          - times = lawyer.available_times(d)
+          - times.each_with_index do |t, j|
+            %li{:class => (j > 2) ? "hidden" : ""}
+              %a.appointment-time{:href => "#", "data-time" => t.strftime("%Y-%m-%d %H:%M:%S"), "data-time-formatted" => t.strftime("%-l:%M %p on %A, %-m/%-e")}
+                #{t.strftime("%l:%M%p")}
+
+          - if times.length > 3
+            %li
+              %a.more{:href => "#"}
+                More
+
+    %h2.appointment-info
+
+    = hidden_field(:appointment, :time)
+    = hidden_field(:appointment, :lawyer_id, :value => lawyer.id)
+
+    %h3
+      %label What would you like to discuss? (optional)
+    =text_area(:appointment, :message)
+
+    / %label Your preferred contact method
+    / %ul
+    /   %li
+    /     =radio_button(:appointment, :appointment_type, :phone, :checked => true)
+    /     Phone
+    /     = text_field(:appointment, :contact_number)
+    /   %li
+    /     =radio_button(:appointment, :appointment_type, :video)
+    /     Video
+    %hr/
+    = submit_tag("Book Appointment", :class => "button")

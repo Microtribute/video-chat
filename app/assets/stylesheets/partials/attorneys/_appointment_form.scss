@@ -1,0 +1,36 @@
+@import "available_appointments";
+
+@mixin appointment_form {
+
+  font-size: 13px;
+
+  div.message {
+    margin: 10px;
+  }
+
+  form {
+    margin: 10px;
+  }
+  
+  h2 {
+    font-size: 15px;
+    font-weight: bold;
+    margin: 10px 0;
+  }
+
+  p {
+    margin: 5px 0 10px 0;
+  }
+
+  label {
+    display: block;
+    clear: both;
+  }
+
+  textarea {
+    height: 100px;
+    width: 480px
+  }
+
+  @include available_appointments(4);
+}

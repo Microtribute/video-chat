@@ -1,0 +1,12 @@
+<p><%= @lawyer.first_name %>,</p>
+
+<p>A client in <%= @question.state_name %> has submitted a premium inquiry related to <%= @question.practice_area.downcase %>.
+To view this question, please <%= link_to "login", @login_url %>, and then click the following link:</p>
+
+<p><%= link_to nil, @inquiry_url %></p>
+
+<p>On this link, you can indicate how much you think is fair to pay to contact this client.</p>
+
+<p>Email <%= mail_to "inquiries@lawdingo.com" %> with any questions.</p>
+
+<p>Thank you.</p>

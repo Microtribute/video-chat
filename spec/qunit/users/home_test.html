@@ -1,0 +1,208 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+                    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <script src="http://localhost.com:3000/assets/jquery.js?body=1"></script>
+  <script src="http://localhost.com:3000/assets/users/home.js?body=1"></script>
+  <link rel="stylesheet" href="../qunit.css" type="text/css" media="screen" />
+  <script type="text/javascript" src="../qunit.js"></script>
+  <script type="text/javascript" src="../qunit.mock.js"></script>
+
+    <script>
+    $(document).ready(function(){
+
+      module("Home", {
+        setup : function(){
+          Home.initialize();
+        },
+        teardown : function(){
+          document.location.hash = ""
+        }
+      })
+
+      test("it should read defaults from the DOM", function(){
+        
+        stub(Home,"submit",function(){})
+        
+        // no DOM modifications
+        equal(
+          Home.service_type, 
+          $("div#service_type input[data-default=1]").val()
+        )
+        equal(
+          Home.state, 
+          $("div#state option[data-default=1]").val()
+        )
+        equal(
+          Home.practice_area, 
+          $("div#practice_areas input[data-default=1]").val()
+        )
+
+      })
+
+      test("it should assign its service_type property when the " +
+        "corresponding radio button is selected",  function(){
+
+        stub(Home,"submit",function(){})
+        
+        // select each service type
+        $("#service_type_1").click();
+        equal(Home.service_type, $("#service_type_1").val());
+
+        $("#service_type_0").click();
+        equal(Home.service_type, $("#service_type_0").val());
+
+      })
+
+      test("it should assign its state property when the corresponding" +
+        "select option is chosen", function(){
+
+        stub(Home,"submit",function(){})
+        
+        $("#state_select").val("All-States").change()
+        equal(Home.state, "All-States")
+
+        $("#state_select").val("State-Of-Insanity").change()
+        equal(Home.state, "State-Of-Insanity")
+
+        $("#state_select").val("Blah").change()
+        notEqual(Home.state, "Blah")
+
+      })
+
+      test("it should assign its practice_area property when the " +
+        "corresponding select option is chosen", function(){
+
+        stub(Home,"submit",function(){})
+        
+        $("#practice_area_All").click()
+        equal(Home.practice_area, "All")
+
+        $("#practice_area_Test").click()
+        equal(Home.practice_area, "Test")
+
+      })
+
+      test("it should be able to get the current search URL", function(){
+
+        stub(Home,"submit",function(){})
+        
+        $("#state_select").val("State-Of-Insanity").change()
+        $("#service_type_0").click();
+        $("#practice_area_Test").click()
+
+        equal(
+          Home.current_search_url(),
+          "/lawyers/Legal-Services/State-Of-Insanity/Test/"
+        )
+
+      })
+
+      test("it should be able to generate its hashbang url", function(){
+        
+        stub(Home,"submit",function(){})
+          
+        $("#state_select").val("State-Of-Insanity").change()
+        $("#service_type_0").click();
+        $("#practice_area_Test").click()
+
+        equal(
+          Home.current_hash(),
+          "!/lawyers/Legal-Services/State-Of-Insanity/Test/"
+        )
+      })
+
+      module("Hashbang", {
+        setup : function(){
+          document.location.hash = "!/lawyers/Legal-Services/State-Of-Insanity"
+          Home.initialize();
+        },
+        teardown : function(){
+          document.location.hash = ""
+        }
+      })
+
+      test("should parse its hash", function(){
+        
+        stub(Home,"submit",function(){})
+        
+        equal(Home.service_type, "Legal-Services")
+        equal(Home.state, "State-Of-Insanity")
+      })
+
+      module("Submitting", {
+        setup : function(){
+          Home.initialize()
+        },
+        teardown : function(){
+          document.location.hash = ""
+        }
+      })
+
+      test("should submit itself if its form fields change", function(){
+        expectCall(Home,"submit", 2)
+        $("#state_select").val("State-Of-Insanity").change()
+        $("#service_type_0").click();
+      })
+
+      test("should submit itself with ajax", function(){
+        expectCall(jQuery,"ajax")
+          .with("/lawyers/Legal-Advice/State-Of-Insanity/")
+          .returns(null)
+        Home.submit()
+      })
+
+      test("should intercept its form's submit action", function(){
+        expectCall(Home,"submit").returns(null)
+        Home.form().submit()
+      })
+
+      test("should set document.hash when submitting", function(){
+        expectCall(jQuery,"ajax")
+          .with("/lawyers/Legal-Advice/State-Of-Insanity/")
+          .returns(null)
+        Home.submit()
+        equal(document.location.hash, "#" + Home.current_hash())
+      })
+
+
+    });
+    </script>
+
+  </head>
+  <body>
+    <h1 id="qunit-header">QUnit example</h1>
+    <h2 id="qunit-banner"></h2>
+    <div id="qunit-testrunner-toolbar"></div>
+    <h2 id="qunit-userAgent"></h2>
+    <ol id="qunit-tests"></ol>
+    <div id="qunit-fixture">
+
+      <form class="filters" action="/lawyers" method="GET">
+        <div id="service_type">
+          <input id="service_type_0" type="radio" name="service_type" value="Legal-Services" />
+          <input id="service_type_1" type="radio" data-default="1" name="service_type" value="Legal-Advice" />
+        </div>
+
+        <div id="state">
+          <select name="state" id="state_select">
+            <option value="All-States">All States</option>
+            <option value="State-Of-Insanity" data-default="1">State of Insanity</option>
+          </select>
+        </div>
+
+        <div id="practice_areas">
+          <ul>
+            <li>
+              <input type="radio" id="practice_area_All" name="practice_area" value="All" data-default="1"/>
+            </li>
+            <li>
+              <input type="radio" id="practice_area_Test" name="practice_area" value="Test" />
+            </li>
+          </ul>
+
+      </section>
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,71 @@
+body{
+	cursor:default;
+	font-size:10px;
+	user-select:none;
+}
+
+p{
+	margin-top:10px;
+	margin-bottom:10px;
+}
+
+.hidden{
+	display:none;
+}
+
+.ui-dialog-titlebar-close {
+  visibility: hidden;
+}
+
+
+.txt_info{
+	width:170px;
+	border:solid 1px #999;
+}
+
+#loginWindow{
+	margin-top:10px;
+	margin-left:10px;
+	width:200px;
+	display:none;
+}
+
+#loginWindow label.caption{
+	width:80px;
+}
+
+#loginWindow p{
+	
+}
+
+
+
+#unloggedScreen{
+	margin-top:10px;
+	margin-left:10px;
+	
+	width:200px;
+	display:none;
+}
+
+
+
+
+#settingWindow{
+	margin-top:10px;
+	margin-left:10px;
+	width:200px;
+	display:none;
+}
+
+
+
+
+#acceptWindow{
+	margin-top:10px;
+	margin-left:10px;
+	width:200px;
+	display:none;
+}
+
+

@@ -1,0 +1,13 @@
+
+<%= link_to "Upload Image", "javascript:void(0);", :title =>"Upload Profile Image", :onclick =>"$('#upload_div').toggle();" %>
+
+<span id="upload_div" style="display: none;">
+  <%= form_for user,:url=>user_image_upload_url(user), :html => {:multipart => true}  do |f| %>
+    <div class="field">      
+      <%= f.file_field :photo %>
+    </div>
+    <div class="field">
+      <%= f.submit 'Upload Image' %>
+    </div>
+  <% end %>
+</span><br/><br/>

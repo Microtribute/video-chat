@@ -1,0 +1,28 @@
+<div id="card_details">
+  <p class="description">To place that bid, you'll need to have payment info on file.</p>
+
+  <div id="stripe_error">
+    <noscript>JavaScript is not enabled and is required for this form. First enable it in your web browser settings.</noscript>
+  </div>
+
+  <div class="sealed">
+    <%= render "godaddy_seal" %>
+  </div>
+
+  <div class="input string">
+    <%= label_tag :card_number, "Credit card number:" %>
+    <%= text_field_tag :card_number, nil, name: nil %>
+  </div>
+
+  <div class="input string">
+    <%= label_tag :card_code, "CVV:" %>
+    <%= text_field_tag :card_code, nil, name: nil %>
+  </div>
+  <div class="clear"></div>
+  <div class="input collection">
+    <%= label_tag :card_month, "Card expiration:" %>
+    <%= select_month nil, { add_month_numbers: true }, { name: nil, id: "card_month" } %>
+    <%= select_year nil, { start_year: Date.today.year, end_year: Date.today.year + 15 }, { name: nil, id: "card_year" } %>
+  </div>
+  <div class="clear"></div>
+</div>

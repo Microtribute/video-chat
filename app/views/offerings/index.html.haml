@@ -1,0 +1,28 @@
+- if params[:ft]
+  %p.notice{:style => "margin-bottom:10px;"}
+    %b All set! Get started by adding some services you offer to clients.
+    Once we’ve verified your bar membership, we’ll email you to let you know that you’re listed on Lawdingo.
+    %a#close_notice{:href => "#"} Close 
+- if current_user.is_lawyer? && current_user.is_online      
+  %h3.lawyer_notice You are now shown as available by video chat. Keep this window open to remain available.    
+#page.offerings
+  %div
+    .profile
+      = render partial: "lawyer/menu", locals: { lawyer: current_user }
+      .profile-block.same_height
+        #offerings-listing
+          %h3 My flat-fee services:
+          - if @lawyer.offerings.count > 0
+            %ul.offerings-list
+              - @lawyer.offerings.each do |offering|
+                - unless offering.id.to_i == 0
+                  = content_tag_for :li, offering, data: {id: offering.id} do
+                    = link_to offering.name, controller: "offerings", action: "show", id: offering.id
+                    .clear
+                    .controls
+                      = link_to "Edit", { controller: "offerings", action: "edit", id: offering.id }, class: "edit"
+                      = link_to "Delete", { controller: "offerings", action: "destroy", id: offering.id }, method: "delete", confirm: "Are you sure?", class: "delete"
+          - else
+            %p.empty [None added yet.]
+        #new_offering_outer
+          = render template: "offerings/new"

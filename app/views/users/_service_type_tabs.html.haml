@@ -1,0 +1,21 @@
+#service_type
+  %a#clear_data_search
+    = image_tag('close_icon.png', :alt => 'clear', :id => "input_close_sea_img")
+    = image_tag('search_bg.png', :alt => 'search', :id => "input_search_bg_img")
+  %a.advice.service_type{:href => '#',"data-default" => "1", 'data-val' => 'Legal-Advice'} 
+    Lawyers
+    -#%span.count= @search.total.to_i
+  %a.service.service_type.selected{:href => '#', 'data-val' => 'Legal-Services'}
+    Services
+    -#%span.count 1
+  -#.availability
+    %input{:type => 'checkbox'}
+    %label Only show lawyers available now
+    
+  %input.search{:placeholder => "Search", :name => "search_query", :id => "search_query"}
+  %input{:name => "freetimeval",     :id => "freetimeval",      :style => "display:none;"}    
+  %input{:name => "ratingval",       :id => "ratingval",        :style => "display:none;"}    
+  %input{:name => "hourlyratestart", :id => "hourlyratestart",  :style => "display:none;"}    
+  %input{:name => "hourlyrateend",   :id => "hourlyrateend",    :style => "display:none;"}   
+  %input{:name => "schoolrating",    :id => "schoolrating",     :style => "display:none;"}
+  %input{:name => "autodetect",      :id => "autodetect",       :style => "display:none;"}

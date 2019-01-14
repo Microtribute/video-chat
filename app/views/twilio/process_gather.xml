@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say voice="woman">
+    Cool. We’ll now connect you with the client.
+  </Say>
+  <Dial action="<%= dial_callback_url %>" method="GET"><%= @call.from %></Dial>
+  <Say>Goodbye</Say>
+</Response>
+

@@ -1,0 +1,30 @@
+.form-wrapper
+	= form_for @post, :as => :post, :url => '/', :method => :put, :html => { :class => "edit_post", :id => "edit_post_45" } do |f|
+
+
+		= f.hidden_field :stripe_card_token
+
+		.field
+			= f.label :email
+			= f.text_field :email
+
+		- if @lawyer.stripe_card_token.present?
+			Credit card has been provided.
+		- else
+			.field
+				= text_field_tag :card_number, nil, name: nil, placeholder: "Credit Card Number"
+
+			.field
+				= text_field_tag :card_code, nil, name: nil, placeholder: "Security Code on Card (CVV)"
+
+			.field
+				= label_tag :card_month, "Card Expiration"
+				= select_month nil, {add_month_numbers: true}, {name: nil, id: "card_month"}
+				= select_year nil, {start_year: Date.today.year, end_year: Date.today.year+15}, {name: nil, id: "card_year"} 
+
+			= f.submit 'Subscribe', :class=>"button", id: "submit_subscribe"
+			= f.submit @lawyer.is_lawyer? ? (@lawyer.new_record? ? 'Apply as Lawyer' : 'Update Account') : (@lawyer.new_record? ? 'Join Lawdingo' : 'Update Account')  ,:class=>"button"
+
+	#stripe_error
+		%noscript
+			JavaScript is not enabled and is required for this form. First enable it in your web browser 

@@ -1,0 +1,94 @@
+@mixin rounded( $radius: 10px) {
+  border-radius: $radius;
+  -moz-border-radius: $radius;
+  -webkit-border-radius: $radius;
+}
+
+#dialog-overlay {
+    background-color: #000;
+    position: absolute;
+    top: 0px; left: 0px;
+    width: 100%;
+    height: 100%;
+    opacity: 0.6;
+    filter: Alpha(opacity=60);
+    z-index: 5;
+    display: none;
+}
+
+.dialog-window {
+    position: absolute;
+    top: 50%; left: 50%;
+    margin-left: -180px;
+    margin-top: -180px;
+    display: inline-block;
+    @include rounded( 6px );
+    background-color: #efefef;
+    width: 360px;
+    height: 372px;
+    box-shadow: 0px 0px 16px #444;
+    z-index: 10;
+    display: none;
+    padding: 20px;
+    font-size: 1.45em;
+
+    > h3 {
+        font-weight: normal;
+        font-size: 1.1em;
+        margin: 0px 0px 8px;
+    }
+    > div {
+        overflow: auto;
+        height: 300px;
+        margin: 10px 0px;
+        > ul {
+            list-style: none;
+            padding: 0px;
+            margin: 0px;
+        }
+    }
+
+    hr {
+        margin: 8px -20px 8px;
+        border-color: #fff;
+    }
+
+    .dialog-close {
+        background: url("close.png") no-repeat scroll center center transparent;
+        height: 30px;
+        margin: 0;
+        width: 30px;
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        cursor: pointer;
+    }
+
+    .button { margin-top: 6px; }
+    .lawyer_name {
+      // font-style: italic;
+    }
+}
+
+.leveled-list {
+    .sub {
+        font-size: 0.9em;
+        padding-left: 32px;
+        ul {
+            margin: 0px;
+            padding: 0px;
+            list-style: none;
+        }
+        input[type="text"] {
+          border: solid 1px #B8B8B8 !important;
+          border-radius: 2px !important;
+          -moz-border-radius: 2px !important;
+          -webkit-border-radius: 2px !important;
+          width: 40% !important;
+          font-size: 1em !important;
+          padding: 2px !important;
+          margin-bottom: 0 !important;
+        }
+    }
+}
+

@@ -1,0 +1,17 @@
+<p><%= @lawyer.first_name %>,</p>
+
+<p>A prospective client in <%= @question.state_name %> has submitted the following inquiry 
+related to <%= @question.practice_area.downcase %>.</p>
+
+<p>Name: <%= @question.user.full_name %>.</p>
+<p>Email: <%= @question.user.email %>.</p>
+
+<% if @question.user.phone.present? %>
+<p>Phone number: <%= @question.user.phone %>.</p>
+<% end %>
+<br />
+
+Inquiry:
+<p><strong><%= @question.body %></strong></p>
+
+<p>Thank you.</p>

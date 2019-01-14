@@ -1,0 +1,19 @@
+= simple_form_for Question.new, remote: logged_in? do |f|
+  = f.input :user_id, as: :hidden, input_html: { value: logged_in? ? current_user.id : nil }
+  = f.input :type, as: :hidden, input_html: { value: type }
+  = f.input :body, as: :string, label: false, :placeholder => "Describe your legal issue here."
+  = f.submit "", class: ""
+  #question_state.question_state
+    .question_state_top
+      %h3.question_label
+        %label Your state:
+    .clear    
+    .question_state_bot
+      = f.select :state_name, State.all.map(&:name), selected: auto_detected_state, :include_blank => "Not specifed"
+  #question_area.question_area
+    .question_area_top
+      %h3.question_label
+        %label Legal domain:
+    .clear
+    .question_area_bot
+      = f.select :practice_area, PracticeArea.where(:parent_id => nil).map(&:name), :include_blank => "Not specifed"

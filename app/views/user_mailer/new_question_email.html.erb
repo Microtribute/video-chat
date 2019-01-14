@@ -1,0 +1,8 @@
+<% if @question.user.present? %>
+<p>User: <%= @question.user.full_name %></p>
+<p>Email: <%= @question.user.email %></p>
+<%= raw "<p>State:  #{@question.state_name}    </p>"    if !!@question.state_name %>
+<%= raw "<p>Practice area:  #{@question.practice_area} </p>"    if !!@question.practice_area %>
+<% end %>
+<p>Inquiry: <!--<%= @type %>--></p>
+<%= simple_format @question.body %>

@@ -1,0 +1,39 @@
+// Place all the styles related to the Stripe controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+$label-color: #404040;
+
+.lawyer_subscribtion#page form#new_subscription{
+	select#card_month, select#card_year{
+	  height: 26px;
+		font-size: 13px;
+		padding: 5px 5px 5px 5px;
+		margin-top: 4px;
+		margin-bottom: 10px;
+		margin-left: 5px;
+		color: $label-color;
+		border: 0;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+		overflow: hidden;
+	}
+	select#card_month{
+	  margin-left:0;
+		width: 147px; 
+		background: url(bid_month_select_bg.png) no-repeat;
+	}
+	select#card_year{
+		width: 100px; 
+		background: url(bid_year_select_bg.png) no-repeat;
+	}
+	#submit_subscribe{
+		
+	}
+	label{
+		color: $label-color;
+		font-size: 13px;
+		margin-left: 5px;
+	}
+}

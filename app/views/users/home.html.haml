@@ -1,0 +1,212 @@
+:javascript
+  var default_state = '#{@state_name || ''}';
+
+  $(function(){
+    Home.initialize();
+  })
+
+.notice{:style => "display: none;"}
+  .text
+    Lawyers are standing by, ready to help you with your legal questions. Choose the type of lawyer you need and start a free consultation.
+    %a#close_notice{:href => "#"} Close
+#current_selected_lawyer
+#inline-wrapper
+  - if flash[:notice].present?
+    .notice
+      .text
+        = flash[:notice]
+        %a#close_notice{:href => "#"} Close
+  -#slogan
+    .inner
+      %h1= @subtext[:second]
+      -#%h1 Lawdingo is a market for live legal consultations. Legal advice with out the law office.
+      = link_to 'Learn More', learnmore_path
+      /%a{:href => '#'} Learn More      
+  %form.filters#filters
+    .left-bar
+      .left-bar-section.first
+        %h2 FIND THE RIGHT LAWYER
+      .sticky_filters
+        -#.left-bar-section#search_class
+          %a#clear_data_search 
+            = image_tag('close_icon.png', :alt => 'clear', :id => "input_close_sea_img")
+            = image_tag('search_bg.png', :alt => 'search', :id => "input_search_bg_img")
+          %h3 Search
+          %input.search{:placeholder => "Search", :name => "search_query", :id => "search_query"}  
+          %input{:name => "freetimeval",     :id => "freetimeval",      :style => "display:none;"}    
+          %input{:name => "ratingval",       :id => "ratingval",        :style => "display:none;"}    
+          %input{:name => "hourlyratestart", :id => "hourlyratestart",  :style => "display:none;"}    
+          %input{:name => "hourlyrateend",   :id => "hourlyrateend",    :style => "display:none;"}   
+          %input{:name => "schoolrating",    :id => "schoolrating",     :style => "display:none;"}
+          %input{:name => "autodetect",      :id => "autodetect",       :style => "display:none;"}
+        -#service_type.left-bar-section
+          %h3 Legal:
+          %a.advice.service_type.selected{:href => '#',"data-default" => "1", 'data-val' => 'Legal-Advice'} Advice
+          %a.service.service_type{:href => '#', 'data-val' => 'Legal-Services'} Service
+
+        - cache("practice-areas-#{PracticeArea.maximum(:updated_at).to_i}") do
+          #practice_areas.left-bar-section.legal_domain
+            %h3 Type of law:
+            .practice-areas
+              %p
+                - if @area_id
+                  = radio_button_tag "practice_area", "All", false
+                - else 
+                  = radio_button_tag "practice_area", "All", true, :class => "selected", "data-default" => "1"
+                %label{:for => "practice_area_All"} All types
+              - @practice_areas.each do |area|
+                %p
+                  - if @area_id && area.selected?(@area_id)
+                    = radio_button_tag "practice_area", area.name_for_url, true, :class => "selected", "data-default" => "1", :data => { :is_national => area.is_national?.to_s }
+                  - else 
+                    = radio_button_tag "practice_area", area.name_for_url, false, data: { is_national: area.is_national?.to_s }
+                  = label_tag "practice_area_#{area.name_for_url}", area.name
+                - if area.children.with_approved_lawyers.present?
+                  .practice-areas.children{:style => "display:none"}
+                    %h3 Specific need?
+                    .child
+                      - area.children.with_approved_lawyers.each do |subarea|
+                        %p
+                          = radio_button_tag "practice_area", subarea.name_for_url, false, data: { is_national: area.is_national?.to_s }
+                          = label_tag "practice_area_#{subarea.name_for_url}", subarea.name          
+        - cache("state-list-#{Lawyer.maximum(:updated_at).to_i}") do
+          #state.left-bar-section
+            %h3
+              %label{:for => "state"} Relevant state:
+            .national-area-notice
+              %p
+              %a.show-states-selector{ href: "#" } Set state anyway
+            %select.states{:name => "state"}
+              - if @state_id
+                %option{:value => "All-States"} Any state
+              - else 
+                %option{"data-default" => "1", :value => "All-States", :selected => :selected} Any state
+              - @states.each do |state|
+                - if @state_id && state.id == @state_id
+                  %option{"data-default" => "1", :value => "#{state.name.gsub(/\s+/,'_')}-lawyers", :selected => :selected }= state.name 
+                - else
+                  %option{:value => "#{state.name.gsub(/\s+/,'_')}-lawyers"}= state.name 
+            %a{ :href => '#', :id => "need_auto_detect" }
+            :javascript
+              $(document).ready(function(){ Home.detect_state() })
+    
+        -#specialities_filter.filters-section{:style => "display: none;"}
+          %input#select_sp{:name => "select_sp", :style => "display: none;", :type => "text", :value => "0"}/
+          %h3 Specific need:
+          %ul.specialities
+
+        -#.left-bar-section
+          %h3 Minimum free minutes:
+          %p.hidden
+            %label{:for => "minimum_free_minutes"} Free time needed:
+            %input#minutes{:style => "border:0; color:#f6931f; font-weight:bold;", :type => "text"}/
+          #free_minutes_slider
+          .filter_slider_spliters
+          .slider_rates
+            %span.two 2 
+            %span.five 5 
+            %span.ten 10 
+            %span.fiveteen 15 
+            %span.twenty 20 
+            %span.thirty 30 
+            %span.sixty 60 
+            %span.ninety 90
+        -#.left-bar-section
+          %h3 Minimum Client rating
+          %p.hidden
+            %label{:for => "minimum_client_rating"} Minimum Client rating:
+            %input#client_rating{:style => "border:0; color:#f6931f; font-weight:bold;", :type => "text"}/
+          #minimum_client_rating
+          .minimum_client_rating_splitters
+          .slider_rates
+            .star.star_1
+              %span 1
+            .star.star_2
+              %span 2
+            .star.star_3
+              %span 3
+            .star.star_4
+              %span 4
+            .star.star_5
+              %span 5    
+        -#.left-bar-section
+          %h3 Per-minute rate:
+          %p.hidden
+            %label{:for => "hourly_rate"} Per-minute rate::
+            %input#hourly_rate_in{:style => "border:0; color:#f6931f; font-weight:bold;", :type => "text"}/
+          #hourly_rate
+          .hourly_rate_splitters
+          .slider_rates
+            %span.h-rate-1
+              $
+            %span.h-rate-2 
+              $$
+            %span.h-rate-3 
+              $$$
+            %span.h-rate-4 
+              $$$$
+        -#.left-bar-section
+          %h3 Law school quality:
+          %p.hidden
+            %label{:for => "law_school_quality"} Law school quality:
+            %input#law_school{:style => "border:0; color:#f6931f; font-weight:bold;", :type => "text"}/
+          #law_school_quality
+          .hourly_rate_splitters
+          .slider_rates
+            %span.law-school-1 B-
+            %span.law-school-2 B
+            %span.law-school-3 A
+            %span.law-school-4 A+
+  .main_content
+    #generail_question.question.question-container
+      -#%h2.selected-lawyers-caption= selected_lawyers_caption
+      %h2
+      = render partial: "questions/form", locals: { type: "lawyer" }
+    / RESULTS
+    #service_type_tabs
+      = render partial: "service_type_tabs"
+    #results.results
+      = render(:partial => "search_results")
+#schedule_session.dialog-window
+  %h3#overlay_user_name
+    %br/
+    %span Ask
+    %span.lawyer_name
+    %span a question.
+  %br/
+  /%span Have a question or comment for
+  /%span.lawyer_name
+  /%span ? Write it here, and
+  /%span.lawyer_name Lawyer
+  /will be able to email you back directly.
+  %textarea#txt_msg{:name => "txt_msg"}
+  %span.fine-print Sending a message does not form an attorney-client relationship.
+  %hr/
+  %a.button.blue{:href => "javascript:void(0)", :onclick => "sendMessage();return false;"} Send Message
+:javascript
+
+  function sendMessage(){
+    close_dialogs();
+    var msg = $('textarea#txt_msg').val();
+    var l1 = $("#current_selected_lawyer").attr("data-id");
+    if(msg != "")
+    {
+      $.ajax({
+          url: "/ScheduleSession",
+          type:'post',
+          data:{email_msg: msg, l2: l1, authenticity_token: $('[name="csrf-token"]').attr("content")},
+          success: function(response){
+          //alert(response);
+
+          if(response == '1')
+             alert('Your message has been sent.');
+           else{
+              alert('Problem sending message. You may not be logged in');
+              }
+             }
+      });
+    }else
+    {
+      alert('You can not send the blank message');
+    }
+  }

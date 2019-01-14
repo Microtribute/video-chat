@@ -1,0 +1,116 @@
+- @user = user if user
+- errors = @user.errors
+= form_for @user, :url =>@user.new_record? ? users_path : user_path(@user) do |f|
+  %h2 Update Your Information
+  - if errors.size > 0
+    .error_explanation
+      The following errors prevented from saving account
+      %br/
+      %ul
+        - errors.full_messages.each{|error|
+        %li= error
+        - }
+  - if @msg
+    %div{:style => "border: 1px solid red;padding: 5px;margin: 10px 10px 20px 100px;width: 500px;"}
+      = @msg
+  = hidden_field_tag :return_url, request.url
+  = hidden_field_tag :user_type, @user[:user_type]
+  %table.client_info_fields
+    %tbody
+      %tr
+        %td 
+          %span First name:
+        %td= f.text_field :first_name ,{:class=>"name"}
+      %tr
+        %td 
+          %span Last name:
+        %td= f.text_field :last_name ,{:class=>"name"}
+      %tr
+        %td 
+          %span Email:
+        %td= f.text_field :email,{:class=>"email"}        
+      %tr
+        %td 
+          %span Password:
+        %td= f.password_field :password ,{:placeholder =>"Password", :class=>"passw"}        
+  %br/
+  - if @user.is_lawyer?
+  - @states = State.all
+  - #@states.count.times {@user.bar_memberships.build}
+  - bms = @user.bar_memberships
+  - bms_text = "Bar Memberships: "
+  - bms.each{|bm|
+  - bms_text += "#{bm.state.name}(Bar ID: #{bm.bar_id}), "
+  - }
+  - bms_text.chomp!(', ')
+  - pas = @user.practice_areas
+  - ppas = @user.practice_areas.parent_practice_areas
+  - pas_text = "Practice Areas: "
+  - ppas.each{|pa|
+  - pas_text += "#{pa.name}"
+  - sps = pa.specialities
+  - sps_text = ""
+  - sps.each{|sp|
+  - sps_text += pas.include?(sp)? "#{sp.name}, ": ""
+  - }
+  - sps_text.chomp!(', ')
+  - pas_text += (sps_text != '')? "(#{sps_text})":""
+  - pas_text += ', '
+  - }
+  - pas_text.chomp!(", ")
+    #div_states_barids{:style => "font-size:1em;"}= bms_text
+    %a#barids_editor.dialog-opener{:href => "#bar_membership"} (edit)
+    #div_practice_areas{:style => "font-size:1em;"}= pas_text
+    %a#practice_areas_editor.dialog-opener{:href => "#practices"} (edit)
+    = f.text_field :rate ,{:class=>"paypal"}
+    %br/
+    = f.text_field :payment_email ,{:class=>"paypal"}
+    %br/
+    = f.text_area :personal_tagline ,{:class=>"summary",:maxlength => 100, :rows=>2}
+    %div{:style => "font-size:14px;"} Update photo
+    = f.file_field :photo
+    / div class="f_label"></div><span style="font-size:12px;">to receive payments from Lawdingo</span><br/
+    - i = 0
+    #dialog-overlay
+    #bar_membership.dialog-window
+      %h3 Edit your bar membership(s)
+      %div
+        %ul#leveled_list_bar_ids.leveled-list
+          = f.fields_for :bar_memberships do |bar_membership_fields|
+            %li{:id => i}
+              = check_box_tag("states_#{i}", @states[i].id, false, :id => "state_#{i}", :onchange =>"javascript:select_unselect_state('#{i}');")
+              = @states[i].name
+              = bar_membership_fields.hidden_field :state_id
+              .sub{:id => @states[i].name}
+                = "#{@states[i].abbreviation} Bar ID:"
+                = bar_membership_fields.text_field :bar_id
+            - i += 1
+      %a.button.blue{:onclick => "setBarIds();"} Done
+    #practices.dialog-window
+      %h3 Edit Practice Area(s)
+      %div
+        %ul#leveled-list_practice_areas.leveled-list
+          - l_pas = @user.practice_areas
+          - PracticeArea.parent_practice_areas.each do |p|
+            %li
+              - if l_pas.include?(p)
+                %input{:checked => "", :id => p.name, :name => "practice_areas[]", :type => "checkbox", :value => p.id}/
+                = p.name
+              - else
+                %input{:id => p.name, :name => "practice_areas[]", :type => "checkbox", :value => p.id}/
+                = p.name
+              .sub
+                = p.name
+                specialities:
+                %ul
+                  - p.specialities.each do |s|
+                    - if l_pas.include?(s)
+                      %li
+                        %input{:checked => "", :id => s.name, :name => "practice_areas[]", :type => "checkbox", :value => s.id}/
+                        = s.name
+                    - else
+                      %li
+                        %input{:id => s.name, :name => "practice_areas[]", :type => "checkbox", :value => s.id}/
+                        = s.name
+      %a.button.blue{:onclick => "setPracticeAreas();"} Done
+  = f.submit @user.is_lawyer? ? (@user.new_record? ? 'Apply for Attorney Account' : 'Update Account') : (@user.new_record? ? 'Join Lawdingo' : 'Update Account')  ,:class=>"button"

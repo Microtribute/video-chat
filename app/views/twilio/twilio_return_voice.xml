@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Gather numDigits="1" action="<%= process_gather_url %>" method="GET">
+  <Say voice="woman">
+    <%= "Hello, this is Lawdingo. A client would like to start a paid consultation with you. To accept now, press one pound. The first #{params[:free_duration]} minutes will be free for the client, and thereafter you will earn #{params[:lrate]} per minute. Please press one pound to accept this call" %>
+  </Say>
+  <!--Play>https://s3.amazonaws.com/bucket_dev/audio/sample.mp3</Play-->
+  </Gather>
+  <Say voice="woman">We didn't receive any input. Goodbye!</Say>
+  <Redirect method="GET">
+  <%= process_gather_url(:Digits => 0) %>
+  </Redirect>
+</Response>
+

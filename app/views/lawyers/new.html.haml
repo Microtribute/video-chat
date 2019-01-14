@@ -1,0 +1,51 @@
+#page.apply-form-wrapper                                                                                      |
+  %h1.form-header Apply for an Attorney Account
+  %div
+    .process-wrapper
+      .process-header
+        .process-bar
+        .first-step.steps.active
+          1
+        .second-step.steps
+          2
+        .third-step.steps
+          3
+        .clear
+        %p.first-notice.notices Create Account
+        %p.second-notice.notices Activate Subcription
+        %p.third-notice.notices Complete Profile
+      .process_notice
+        %h3
+          Already a Lawdingo member? #{link_to "Log in", login_path(session[:return_to])} now.
+      .apply-form
+        = render(:partial => '/users/form', :locals => {:user => @lawyer})
+    .right-wrapper
+      .right-block.testimonials
+        %h3 Testimonials
+        .testimonials_slider
+          %div
+            %p Lawdingo works! I have had paying clients from Lawdingo and I haven't had to expend a lot of time, effort, or money to get them.
+            %p.signature - Deepa Menon, Attorney
+          %div 
+            %p Wouldn’t have used or paid for a lawyer if it weren’t for Lawdingo
+            %p.signature - Lawdingo client
+          %div
+            %p For just over $100 for a half hour call, I got the advice I needed from a top-quality lawyer on Lawdingo.
+            %p.signature - Lawdingo client
+        .clear
+      .right-block
+        %h3 Attorney Benefits
+        %ul
+          %li Get paid to talk to potential new clients
+          %li Attorney profile featuring your practice
+          %li List flat-fee services, record intro video
+          %li Display availability, accept appointments
+          %li Receive legal inquiries relevant to you
+          %li No fee-splitting or referral fees charged
+          %li Just $92/month with no commitments
+      .contact_outer
+        %p 
+          Questions? Contact:
+          %a{:href => 'mailto:info@lawdingo.com'} info@lawdingo.com 
+          %br/
+          or 415-234-DINGO (3464).

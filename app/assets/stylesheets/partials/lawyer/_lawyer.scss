@@ -1,0 +1,3 @@
+@mixin lawyer {
+  @include available_appointments(2)
+}

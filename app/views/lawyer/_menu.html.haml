@@ -1,0 +1,17 @@
+- act = action_name.to_sym
+- contr = controller_name.to_sym
+.left_menu.same_height
+  %h2= link_to_unless (controller.controller_name == 'daily_hours' || controller.controller_name == 'offerings' || controller.controller_name == 'videos'), "Profile info", user_path(lawyer, :t => User::ACCOUNT_TAB)
+  %ul
+    %li.acc_info
+      %span= link_to "Account information", user_path(lawyer, :t => User::ACCOUNT_TAB)
+    %li.price_offers
+      %span= link_to "Fixed-price offers", user_offerings_path(lawyer), :class => (act == :index && contr == :offerings) ? 'active' : ''
+    %li.availability
+      %span= link_to "Set availability", user_daily_hours_path(lawyer), :class => (act == :index && contr == :daily_hours) ? 'active' : ''
+    %li.video
+      %span= link_to "Intro video", framey_videos_path, :class => (act == :index && contr == :'videos') ? 'active' : ''
+    - if lawyer.is_approved
+      %li.view_profile
+        %span= link_to "View your profile", attorney_path(lawyer, slug: lawyer.slug), :target => 'blank'
+  %h2= link_to_unless_current "Summary of sessions", user_path(lawyer, :t => User::SESSION_TAB)

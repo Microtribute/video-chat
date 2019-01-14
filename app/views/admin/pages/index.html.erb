@@ -1,0 +1,24 @@
+List of Pages <span style="float: right;"> <%= link_to "Add New Page", new_admin_page_path %></span> <hr/>
+
+<table>
+  <thead>
+    <tr>
+      <td> Page Name </td>
+      <td> </td>
+    </tr>
+  </thead>
+  <tbody>
+    <% @pages.each{|page| %>
+      <tr>
+        <td>
+          <%= page.name %>
+        </td>
+        <td>
+          <%= link_to "Edit Page", edit_admin_page_path(page.id) %>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+

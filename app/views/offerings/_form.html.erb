@@ -1,0 +1,7 @@
+<%= simple_form_for [@lawyer, @offering], :url => user_offerings_path(@lawyer, @offering) do |f| %>
+  <%= f.input :practice_area_id, collection: PracticeArea.parent_practice_areas, include_blank: false, label: "Relevant practice area:" %>
+  <%= f.input :name, label: "Name of flat-fee service:", hint: "e.g. \"Contract review — up to 3 pages\".".html_safe %>
+  <%= f.input :description, label: "What specifically will you do and deliver?" %>
+  <%= f.input :fee, label: "Fee typically charged:", hint: "The typical amount you charge for this.", as: :currency %>
+  <%= f.submit params[:action] == "edit" ? "Edit flat-fee service" : "Add flat-fee service", class: "button", style: "font-size: 1.0833em;" %>
+<% end %>

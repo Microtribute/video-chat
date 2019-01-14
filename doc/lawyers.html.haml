@@ -1,0 +1,274 @@
+#inline-wrapper
+  .left-bar
+    .left-bar-section.first
+      %h2 Find the right lawyer
+    .left-bar-section
+      %h3 Looking for legal:
+      %a.advice.selected{:href => '#'} Advice
+      %a.service{:href => '#'} Service
+    .left-bar-section
+      %h3 Your state:
+      %select.states
+        %option Any State
+    .left-bar-section.legal_domain
+      %h3 Legal domain:
+      %p
+        %input{:type => 'radio', :id => 'all_types', :name => 'ldomain', :value => 'all_types'}/
+        %label{:for => 'all_types'} All types
+      %p
+        %input{:type => 'radio', :id => 'bankruptcy', :name => 'ldomain', :value => 'bankruptcy'}/
+        %label{:for => 'bankruptcy'} Bankruptcy    
+      %p
+        %input{:type => 'radio', :id => 'business_startups', :name => 'ldomain', :value => 'business_startups'}/
+        %label{:for => 'business_startups'} Business / Startups
+      %p
+        %input{:type => 'radio', :id => 'divorse_family', :name => 'ldomain', :value => 'divorce_family'}/
+        %label{:for => 'divorce_family'} Divorce / Family
+      %p
+        %input{:type => 'radio', :id => 'employment', :name => 'ldomain', :value => 'employment'}/
+        %label{:for => 'employment'} Employment
+      %p
+        %input{:type => 'radio', :id => 'immigration', :name => 'ldomain', :value => 'immigration'}/
+        %label{:for => 'immigration'} Immigration
+      %p
+        %input{:type => 'radio', :id => 'patents_ip', :name => 'ldomain', :value => 'patents_ip'}/
+        %label{:for => 'patents_ip'} Patents / IP
+      %p
+        %input{:type => 'radio', :id => 'personal_injury', :name => 'ldomain', :value => 'personal_injury'}/
+        %label{:for => 'personal_injury'} Personal Injury
+      %p
+        %input{:type => 'radio', :id => 'real_estate_rentals', :name => 'ldomain', :value => 'real_estate_rentals'}/
+        %label{:for => 'real_estate_rentals'} Real Estate / Rentals
+      %p
+        %input{:type => 'radio', :id => 'wills_and_estates', :name => 'ldomain', :value => 'wills_and_estates'}/
+        %label{:for => 'wills_and_estates'} Wills and Estates                                              
+    .left-bar-section
+      %h3 Specific need:
+      %p
+        %input{:type => 'radio', :id => 'general_business_startups', :name => 'sneed', :value => 'general_business_startups'}/
+        %label{:for => 'general_business_startups'} General Business / Startups
+      %p
+        %input{:type => 'radio', :id => 'contract_review', :name => 'sneed', :value => 'contract_review'}/
+        %label{:for => 'contract_review'} Contract review
+      %p
+        %input{:type => 'radio', :id => 'financing_documents', :name => 'sneed', :value => 'financing_documents'}/
+        %label{:for => 'financing_documents'} Financing documents
+      %p
+        %input{:type => 'radio', :id => 'hiring_employees', :name => 'sneed', :value => 'hiring_employees'}/
+        %label{:for => 'hiring_employees'} Hiring employees
+      %p
+        %input{:type => 'radio', :id => 'ip_and_patents', :name => 'sneed', :value => 'ip_and_patents'}/
+        %label{:for => 'ip_and_patents'} IP and patents
+      %p
+        %input{:type => 'radio', :id => 'incorporation', :name => 'sneed', :value => 'incorporation'}/
+        %label{:for => 'incorporation'} Incorporation
+    .left-bar-section
+      %h3 Search
+      %input.search{:placeholder => "Enter any key"}   
+    .left-bar-section
+      %h3 Minimum free minutes:
+      %p.hidden
+        %label{:for => "minimum_free_minutes"} Minimum free minutes:
+        %input#minutes{:style => "border:0; color:#f6931f; font-weight:bold;", :type => "text"}/
+      #free_minutes_slider
+      .filter_slider_spliters
+      .slider_rates
+        %span.two 2 
+        %span.five 5 
+        %span.ten 10 
+        %span.fiveteen 15 
+        %span.twenty 20 
+        %span.thirty 30 
+        %span.sixty 60 
+        %span.ninety 90
+    .left-bar-section
+      %h3 Minimum Client rating
+      %p.hidden
+        %label{:for => "minimum_client_rating"} Minimum Client rating:
+        %input#client_rating{:style => "border:0; color:#f6931f; font-weight:bold;", :type => "text"}/
+      #minimum_client_rating
+      .minimum_client_rating_splitters
+      .slider_rates
+        .star.star_1
+          %span 1
+        .star.star_2
+          %span 2
+        .star.star_3
+          %span 3
+        .star.star_4
+          %span 4
+        .star.star_5
+          %span 5    
+    .left-bar-section
+      %h3 Hourly rate:
+      %p.hidden
+        %label{:for => "hourly_rate"} Hourly rate:
+        %input#hourly_rate_in{:style => "border:0; color:#f6931f; font-weight:bold;", :type => "text"}/
+      #hourly_rate
+      .hourly_rate_splitters
+      .slider_rates
+        %span.h-rate-1 $
+        %span.h-rate-2 $$
+        %span.h-rate-3 $$$
+        %span.h-rate-4 $$$$
+    .left-bar-section
+      %h3 Law school quality:
+      %p.hidden
+        %label{:for => "law_school_quality"} Law school quality:
+        %input#law_school{:style => "border:0; color:#f6931f; font-weight:bold;", :type => "text"}/
+      #law_school_quality
+      .hourly_rate_splitters
+      .slider_rates
+        %span.law-school-1 B-
+        %span.law-school-2 B
+        %span.law-school-3 A
+        %span.law-school-4 A+
+  .main_content
+    .question
+      %h2 There are 16 California lawyers who can offer you legal advice right now.
+      %input{:placeholder => "Don’t know who to pick? Just ask your question here."}
+      %a{:href => '#'}
+    .row
+      .left
+        .avatar
+          = image_tag('lawyer_ava.png', :alt => '')
+        .stars
+          %span.star_rating.on
+          %span.star_rating
+          %span.star_rating
+          %span.star_rating
+          %span.star_rating  
+        %a.reviews{:href => '#'}
+          Reviews (25)
+      .middle
+        %h1 Trevor Caudle
+        .online_icons
+          %span.video.online 
+          %span.voice.online
+          .video_chat.online.tooltip Available for video chat
+          .voice_chat.online.tooltip Available for voice chat
+          .video_chat.offline.tooltip Not available by video now
+          .voice_chat.offline.tooltip Not available by phone now
+        .description
+          %p &#8220;Experienced biz attorney focussing on&#8221;.. Read More
+          %ul
+            %li Licensed in AK, AZ, WY, WI
+            %li Advises on bankruptcy and divorce / family law
+          %a.free{:href=> "#"}
+            %p 20 minutes free
+            %p.small then $2.50/minute
+          .button_tooltip
+            %ul
+              %li.disabled 
+                %a Video consultation
+              %li
+                %a Voice consultation
+              %li 
+                %a Ask questions
+              %li 
+                %a Schedule Interview
+      .right
+        %p Available appointments
+        %table
+          %tr
+            %th
+              %a.first_date{:href => '#'} Today
+            %th
+              %a.second_date{:href => '#'} Fri, 11/21
+          %tr
+            %td
+              %a{:href=>'#'} 4:30pm
+            %td
+              %a{:href=>'#'} 9:00am
+          %tr
+            %td
+              %a{:href=>'#'} 5:00pm
+            %td
+              %a{:href=>'#'} 9:30am
+          %tr
+            %td
+              %a{:href=>'#'} 5:30pm
+            %td
+              %a{:href=>'#'} 8:30am
+          %tr
+            %td
+              %a{:href=>'#'} more
+            %td
+              %a{:href=>'#'} more                                     
+          
+        %a.appointments{:href => '#'}
+          All available appointments
+    - 3.times do      
+      .row
+        .left
+          .avatar
+            = image_tag('lawyer_ava.png', :alt => '')
+          .stars
+            %span.star_rating.on
+            %span.star_rating
+            %span.star_rating
+            %span.star_rating
+            %span.star_rating  
+          %a.reviews{:href => '#'}
+            Reviews (25)
+        .middle
+          %h1 Trevor Caudle
+          .online_icons
+            %span.video.offline 
+            %span.voice.offline
+            .video_chat.online.tooltip Available for video chat
+            .voice_chat.online.tooltip Available for voice chat
+            .video_chat.offline.tooltip Not available by video now
+            .voice_chat.offline.tooltip Not available by phone now
+          .description
+            %p &#8220;Experienced biz attorney focussing on&#8221;.. Read More
+            %ul
+              %li Licensed in AK, AZ, WY, WI
+              %li Advises on bankruptcy and divorce / family law
+            %a.free{:href=> "#"}
+              %p 20 minutes free
+              %p.small then $2.50/minute
+            .button_tooltip
+              %ul
+                %li.disabled 
+                  %a Video consultation
+                %li
+                  %a Voice consultation
+                %li 
+                  %a Ask questions
+                %li 
+                  %a Schedule Interview
+        .right
+          %p Available appointments
+          %table
+            %tr
+              %th
+                %a.first_date{:href => '#'} Today
+              %th
+                %a.second_date{:href => '#'} Fri, 11/21
+            %tr
+              %td
+                %a{:href=>'#'} 4:30pm
+              %td
+                %a{:href=>'#'} 9:00am
+            %tr
+              %td
+                %a{:href=>'#'} 5:00pm
+              %td
+                %a{:href=>'#'} 9:30am
+            %tr
+              %td
+                %a{:href=>'#'} 5:30pm
+              %td
+                %a{:href=>'#'} 8:30am
+            %tr
+              %td
+                %a{:href=>'#'} more
+              %td
+                %a{:href=>'#'} more                                     
+          
+          %a.appointments{:href => '#'}
+            All available appointments
+                        
+:javascript  
+  

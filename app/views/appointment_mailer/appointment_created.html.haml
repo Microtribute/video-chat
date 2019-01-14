@@ -1,0 +1,26 @@
+%p
+  A client, #{@appointment.client_name}, has scheduled a
+  consultation with you at #{@appointment.time}.
+
+- if @appointment.message.present?
+  %p The client would like to discuss the following:
+  %p
+    %strong #{@appointment.message}
+
+%p
+  If you have the capability to consult by video chat, please log
+  in to Lawdingo just before this time so that you can accept a
+  video call from the client. Otherwise, you'll be reached by
+  phone, so keep your phone handy.
+
+%p
+  To confirm or reschedule, please email #{@appointment.client.try(:first_name)} at #{@appointment.client.try(:email)}.
+
+%p
+  Remember that, per your settings, the first
+  #{@appointment.free_minutes} minutes will be free
+  for the client and after that, you
+  will earn #{@appointment.per_minute_rate} per minute.
+
+%p
+  Thanks.

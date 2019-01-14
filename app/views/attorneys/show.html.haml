@@ -1,0 +1,310 @@
+:javascript
+  $(function(){
+    LawyersShow.initialize(#{@attorney.id})
+  })
+
+- title "#{@attorney.full_name} — #{@attorney.licenced_states.join(', ')} lawyer advising on #{@attorney.areas_human_list} on Lawdingo"
+
+-content_for :head do
+  %meta{:property => "og:title",     :content => yield(:title)}
+  %meta{:property => "og:type",      :content => 'public_figure'}
+  %meta{:property => "og:url",       :content => attorney_url(@attorney, slug: @attorney.slug)}
+  %meta{:property => "og:image",     :content => @attorney.photo.url(:medium)}
+  %meta{:property => "og:admins",    :content => '363994853644871'}
+
+%div{:id => "lawyer_#{@attorney.id}"}
+  #inline-wrapper
+    .left-bars-block
+      = link_to "All Lawyers", lawyers_path, class: 'back_to_lawyers'
+      -#.left-bar
+        .left-bar-section.first_section
+          %span.back_to
+            = link_to "< Back to All Lawyers", lawyers_path
+      .left-bar.status
+        .left-bar-section.info-header
+          = content_tag :h2, "Talk to #{@attorney.first_name}"
+        .left-bar-section
+          .online_icons
+            %p 
+              - if @attorney.is_online
+                %span.video.online= start_or_video_button_p(@attorney)
+                %span.online_video_tooltip= start_or_video_button_profile(@attorney)
+                .video_chat.online.tooltip Available for video chat
+              - else 
+                %span.video.offline
+                %span.offline_video_tooltip Not available by video now
+                .video_chat.offline.tooltip Not available by video now
+            %p
+              - if @attorney.is_available_by_phone?
+                %span.voice.online= start_phone_consultation_p(@attorney)
+                %span.online_voice_tooltip= start_phone_consultation_profile(@attorney)
+                .voice_chat.online.tooltip Available by phone now
+              - else
+                %span.voice.offline
+                %span.offline_voice_tooltip Not avaiable by phone now
+                .voice_chat.offline.tooltip Not available by phone now 
+            %p
+              %span.note= start_or_schedule_button_text_profile(@attorney)
+              %span= start_or_schedule_button_text_profile_text(@attorney)
+            %p 
+              - if @attorney.daily_hours.present?
+                %span.text.online
+                  %a.appt-select{:href => '#'}              
+                %span 
+                  %a.appt-select{:href => '#'} Schedule a consultation
+              - else
+                %span.text.offline
+                %span No appointments available
+            
+      .left-bar
+        .left-bar-section.info-header
+          %h2 
+            About 
+            = @attorney.first_name
+        .left-bar-section.info
+          %div
+            %h3 State bar memberships:
+            %ul
+              - @attorney.states.each do |state|
+                %li= state.name
+            = content_tag :h3, "#{@attorney.first_name}'s key practice areas:"
+            = render collection: @attorney.practice_areas.where(parent_id: nil).order("name"), partial: "attorneys/area", as: :area, locals: { lawyer: @attorney }
+          .person_info
+            - if @attorney.school.present? || @attorney.undergraduate_school.present?
+              = content_tag :h3, "#{@attorney.first_name}'s background:"
+            - if @attorney.school.present?
+              %p Law school
+              %ul
+                %li= @attorney.school.name
+            - if @attorney.undergraduate_school.present?
+              %p Undergrad school
+              %ul
+                %li= @attorney.undergraduate_school
+            - if @attorney.license_year.present?
+              %p Years practicing law
+              %ul
+                %li= pluralize years_practicing_law(@attorney), "year", "years"
+            - if @attorney.yelp_business_id.present? && !!@attorney.yelp[:rating_img_url]
+              %p Yelp rating
+              .yelp-rating-container
+                .stars
+                  = image_tag @attorney.yelp[:rating_img_url]
+                %p.small
+                  Based on #{pluralize @attorney.yelp[:review_count], "review", "reviews"}
+                .clear
+              %br/  
+            - if @attorney.reviews.average(:rating).to_i > 0
+              .yelp-rating-container
+                %p 
+                  Lawdingo rating
+                  = link_to_unless_current content_tag(:div, "", class: "rating", data: { score: @attorney.reviews.average(:rating).to_i }), attorney_path(@attorney, slug: @attorney.slug, anchor: "reviews"), class: "rating-stars"
+                %p.small
+                  Based on #{pluralize @attorney.reviews.count, "review", "reviews"}
+
+    - bms = []
+    - bms = @attorney.bar_memberships unless @attorney.bar_memberships.blank?
+    - licenced_states = ""
+    - bms.each{ |bm|
+    - licenced_states += bm.state.abbreviation + ', '
+    - }
+    - licenced_states.chomp!(', ')
+    - pas = []
+    - pas = @attorney.practice_areas.parent_practice_areas unless @attorney.practice_areas.blank?
+    - pas_string = ""
+    - pas.each{|pa|
+    - pas_string += pa.name + ', '
+    - }
+    - pas_string.chomp!(', ')
+    - pas_names = pas.map { |area| area.name.downcase  }
+    - pas_names_last = pas_names.pop
+    - pas_names_list = pas_names.empty? ? pas_names_last : "#{pas_names.join(', ')} and #{pas_names_last}"     
+    .main_content
+      .bio-block
+        .left_border
+        = render "share"
+        .avatar
+          = image_tag(@attorney.photo.url(:medium))
+        .middle
+          %h1.gray
+            = link_to_unless_current "#{@attorney.full_name}", attorney_path(@attorney, slug: @attorney.slug)
+          -#.price
+            -#.free
+              %table
+                %tbody
+                  %tr
+                    %td
+                      %p= start_or_schedule_button(@attorney)
+
+            %br/
+            -#.lawyer_rates
+              %h5= free_message(@attorney)
+              = content_tag :p, "then #{number_to_currency (@attorney.rate + AppParameter.service_charge_value)}/minute"
+              %p.small
+                %span (prorated to the minute)                    
+          %h3
+            - unless @attorney.bar_memberships.blank?
+              Licensed in #{licenced_states}
+          - if @attorney.personal_tagline.present?    
+            %p.tagline= raw "#{simple_format '“' + @attorney.personal_tagline + '”'}"
+          .free_button_wrapper
+            %a.free{:href=> "#"}
+              %p= free_message(@attorney)
+              = content_tag :p, "then #{number_to_currency (@attorney.rate + AppParameter.service_charge_value)}/minute", class: "small"                      
+            .free_dropdown{:href=> "#"}
+            .button_tooltip
+              .button-content
+                %ul
+                  - if @attorney.is_online && !@attorney.is_busy
+                    %li
+                      = start_or_schedule_button(@attorney)
+                  - if @attorney.is_available_by_phone?
+                    %li
+                      = start_phone_consultation(@attorney)
+                  - if @attorney.daily_hours.present?
+                    %li
+                      %a.appt-select{:href => '#'} Schedule a consultation                      
+                  %li
+                    = start_or_schedule_button_text(@attorney)              
+      - if @attorney.daily_hours.present?          
+        .profile_info
+          %h2 Schedule a Consultation with #{@attorney.first_name}
+          .main-content
+            .header_content
+              -#.left
+                %h2 Ask a question:
+                %textarea{:placeholder => 'Type your question here'}
+                %a{:href => '#'} Ask
+              .right
+                %div.available-appointments
+                  - @attorney.next_available_days(4).each_with_index do |d, i|
+                    %ul
+                      %li.title
+                        %a{:href => '#', :class => "day-#{i}"} 
+                          - if d === Date.today
+                            Today
+                          - elsif d === Date.tomorrow
+                            Tomorrow
+                          - else 
+                            #{d.strftime("%a, %m/%d")}
+                      - times = @attorney.available_times(d)
+                      - times[0..2].each do |t|
+                        %li
+                          %a.appt-select{:href => "#", "data-time" => t.strftime("%Y-%m-%d %H:%M:%S")}
+                            #{t.strftime("%l:%M%p")}
+                      - if times.length > 3
+                        %li
+                          %a{:href => "#"}
+                            More                        
+                  .clear
+              .appointments
+                %a.appt-select{:href => '#'}
+                  See All Appointments
+                  - if @attorney.time_zone       
+                    .times           
+                      %span.grey Times in #{@attorney.timezone_abbreviation}
+                      = "(#{@attorney.timezone_utc_offset}:00)"  
+              - # important this is outside the .right because otherwise listeners are applied
+              - # to the a tags in the actual form rather than only to the list above
+              %div{:style => "display:none;"}
+                = render(:partial => "appointment_form", :locals => {:lawyer => @attorney})
+      - if @attorney.has_video?
+        .profile_info
+          %h2 #{@attorney.first_name}'s self-introduction video:
+          .main-content
+            .video-block
+            
+              #intro_video.video-block
+                = render_player({                                |
+                      video_url: @video.flv_url,                 |
+                      thumbnail_url: @video.large_thumbnail_url, |
+                  })
+        -#.practice-block
+          %h4 More about practice:
+          %p Strip steak tongue salami biltong. Pancetta ground round short ribies tail streips siteak. Tongue pig beef ris strip steak fnekiefurter kielbasa. Pork t-bone venison, ham hiock shank ball tip pork belly. Spare ribes ham  filet mignon chicken flank pork belly tri-tip shank speck. Kielbasa fatback jerky, haam t-bone leberkeuas tongue. Pork belly beef ribs ham, chicken venison ham hock swine burger ground round shank ribeye.   
+      - if @attorney.offerings.any?    
+        .profile_info 
+          %a#flat-fee{:name => 'flat-fee'}
+          = content_tag :h2, "#{@attorney.first_name}'s Flat-fee Services (#{@attorney.offerings.count})" 
+          .main-content
+            .main-info
+              = render collection: @attorney.offerings, partial: "offerings/offering_template", locals: { lawyer: @attorney } 
+      - if (@attorney.yelp_business_id.present? && !!@attorney.yelp[:reviews]) || @attorney.reviews.count.to_i > 0
+        .profile_info   
+          %h2 Reviews
+          .main-content
+            .main-info
+              - if @attorney.yelp_business_id.present? && !!@attorney.yelp[:reviews]
+                %h4.yelp
+                  Latest
+                  = link_to image_tag('yelp_logo_50x25.png'), "http://www.yelp.com"
+                  reviews:
+                - @attorney.yelp[:reviews].each do |review|
+                  .comment-block
+                    = image_tag(review["user"]["image_url"])
+                    .comment_cloud
+                      .left_border
+                      .stars
+                        = content_tag :div, image_tag(review["rating_image_url"]), class: "rating"
+                      = content_tag :li, class: "yelp-review", id: review["id"] do            
+                        = content_tag :p, yelp_review_excerpt(review, @attorney)
+                        = content_tag :span, yelp_review_posted_by(review), class: "footnote"
+              - if @attorney.reviews.count.to_i > 0
+                %h4 Lawdingo client reviews:        
+                .client-reviews#reviews
+                  %a{:name => 'reviews'}
+                  = render @attorney.reviews.order("created_at DESC")
+              
+
+  #schedule_session.dialog-window
+    %h3#overlay_user_name
+      %br/
+      %span Ask
+      %span.lawyer_name
+      %span a question.
+    %br/
+    /%span Have a question or comment for
+    /%span.lawyer_name
+    /%span ? Write it here, and
+    /%span.lawyer_name Lawyer
+    /will be able to email you back directly.
+    %textarea#txt_msg{:name => "txt_msg"}
+    %span.fine-print Sending a message does not form an attorney-client relationship.
+    %hr/
+    %a.button.blue{:href => "javascript:void(0)", :onclick => "sendMessage();return false;"} Send Message
+:javascript
+  function sendMessage(){
+    close_dialogs();
+    var msg = $('textarea#txt_msg').val();
+    var l1 = $("#current_selected_lawyer").attr("data-id");
+    if(msg != "")
+    {
+      $.ajax({
+          url: "/ScheduleSession",
+          type:'post',
+          data:{email_msg: msg, l2: l1, authenticity_token: $('[name="csrf-token"]').attr("content")},
+          success: function(response){
+          //alert(response);
+
+          if(response == '1')
+             alert('Your message has been sent.');
+           else{
+              alert('Problem sending message. You may not be logged in');
+              }
+             }
+      });
+    }else
+    {
+      alert('You can not send the blank message');
+    }
+  }
+:javascript
+  $(".person_info .rating").raty({
+      path: "/assets/raty",
+      hintList: ['', '', '', '', '', ''],
+      readOnly: true,
+      start: function() {return $(this).data("score")}
+  });
+
+
+
+

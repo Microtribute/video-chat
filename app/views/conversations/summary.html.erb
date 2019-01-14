@@ -1,0 +1,33 @@
+<div id="page">
+  <div>
+    <div class="inner session-complete">
+      <div class="column">
+        <h3>Session summary:</h3>
+        <ul class="summary-details">
+          <li><span class="label">Actual time elapsed:</span> <%= distance_of_time_in_words(@conversation.start_date, @conversation.end_date) %></li>
+          <li><span class="label">Billed time elapsed:</span> <%= @conversation.billable_time %> minute(s)</li>
+          <li><span class="label">Attorney's rate:</span> <%= number_to_currency @conversation.lawyer_rate %>/minute</li>
+          <li><span class="label">Lawdingo's rate:</span> <%= number_to_currency AppParameter.service_charge_value %>/minute</li>
+          <li><span class="label">Amount billed:</span> <%= number_to_currency @conversation.billed_amount %></li>
+        </ul>
+
+        <% if params[:call_type].present? && params[:call_type] == 'phonecall' %>
+          <%= link_to "Restart Session", phonecall_path(:id => @lawyer.id), :title =>"Restart Session", :class =>'button blue' %>
+        <% elsif @lawyer.is_online? && !@lawyer.is_busy %>
+            <%= link_to "Restart Session", user_chat_session_path(@lawyer), :title =>"Restart Session", :class =>'button blue' %>
+        <% end %>
+
+        <ul class="navigation-links">
+          <li><%= link_to "<< Go home", root_path %></li>
+          <li><%= link_to 'View all my previous sessions >>', user_path(current_user,:t =>'l'), :title => 'View all my previous sessions' %></li>
+        </ul>
+      </div>
+
+      <div class="column last-child">
+        <%= render conversation_summary_form %>
+      </div>
+
+      <div class="clear"></div>
+    </div>
+  </div>
+</div>

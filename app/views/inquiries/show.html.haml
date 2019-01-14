@@ -1,0 +1,46 @@
+- title "Lawdingo Client Inquiry"
+#page.inquiry-page
+  - if flash.any?
+    = notice text: flash[:notice]
+  %div
+    .inner
+      %h1 Client Inquiry
+      = simple_format @inquiry.question.body, class: "question"
+      = render "details"
+      .hr
+      %h1 How this works
+      %p 
+        In order to route this to the right attorneys, we ask that you indicate your willingness to pay to contact the client. The three highest bidders will be the lowest of those three bids and will be able to contact the clients. For example, if lawyers bid 
+        %strong $2, $3, $7 
+        and 
+        %strong $15, 
+        the top three bidders will each pay Lawdingo 
+        %strong $3 and will be able to contact the client. Please email 
+        %a{:href => 'mailto:inquiries@lawdingo.com'} inquiries@lawdingo.com 
+        with any questions.
+      .hr  
+      .bids
+        %span.label Current bids:
+        = render "current_bids"
+        %small.notice The three highest bidders will be able to contact the client, and will each be charged the third-highest bid.
+        - unless @inquiry.expired?
+          = simple_form_for @bid do |f|
+            = f.input :amount, as: :currency, label: "Edit your bid:", hint: "minimum #{number_to_currency @inquiry.minimum_bid}", input_html: { data: { minimum_bid: @inquiry.minimum_bid } }, autofocus: true
+            = f.input :inquiry_id, as: :hidden, input_html: { value: @inquiry.id }
+            = f.input :lawyer_id, as: :hidden, input_html: { value: current_user.id }
+            = f.input :stripe_card_token, as: :hidden unless current_user.stripe_customer_token.present?
+            .countdown-wrapper
+              %span.label time remaining:
+              = content_tag :div, "", class: "countdown",              |
+                  data: {                                              |
+                    expiration_year: @inquiry.expiration(:year),       |
+                    expiration_month: @inquiry.expiration(:month),     |
+                    expiration_day: @inquiry.expiration(:day),         |
+                    expiration_hours: @inquiry.expiration(:hours),     |
+                    expiration_minutes: @inquiry.expiration(:minutes), |
+                    expiration_seconds: @inquiry.expiration(:seconds)  |
+                }                                                      |
+            = render "bids/payment_form" unless current_user.stripe_customer_token.present?
+            = f.submit "Place bid", class: "button", data: { ensure_card_details: !current_user.stripe_customer_token.present? }
+        - else
+          %span.closed-biding-label Biding closed

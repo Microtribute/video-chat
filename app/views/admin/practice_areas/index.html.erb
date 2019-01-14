@@ -1,0 +1,24 @@
+<div style="font-size:1.5em;">
+ List of Practice Areas <span style="float: right;"> <%= link_to 'Add New PracticeArea', new_admin_practice_area_path %> </span> <hr/>
+<table>
+  <thead>
+    <tr>
+      <td>Name</td> <td>Parent Practice Area</td><td></td>
+    </tr>
+  </thead>
+  <tbody>
+    <% @practice_areas.each{|pa| %>
+      <tr>
+        <td><%= pa.name %></td>
+        <td> <%= pa.main_area.nil? ? '--' : pa.main_area.name %> </td>
+        <td>
+          <%= link_to "Edit", edit_admin_practice_area_path(pa) %> &nbsp;&nbsp;|
+          <%= link_to "Remove", admin_practice_area_path(pa), :method =>:delete, :confirm =>"Are you sure?" %> |
+
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+</div>
+

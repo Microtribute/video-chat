@@ -1,0 +1,10 @@
+<h1>Inquiry #<%= @inquiry.id %> closed</h1>
+
+<h2>Winners</h2>
+<ol>
+  <% @inquiry.winners.each do |winner| %>
+    <%= content_tag :li, "#{winner.full_name} (#{winner.email}): #{number_to_currency winner.bids.where(inquiry_id: @inquiry.id).last.amount}" %>
+  <% end %>
+</ol>
+
+<p><%= @inquiry_url %></p>

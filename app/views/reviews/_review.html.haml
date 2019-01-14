@@ -1,0 +1,17 @@
+= content_tag_for :div, review do
+  .left
+    .stars
+      = content_tag :div, "", class: "rating", data: { score: review.rating }
+  .right
+    = content_tag :p, "#{(review.conversation.duration / 60).round} minute session about <strong>#{review.purpose.downcase}</strong>, #{review.created_at.strftime("%m/%d/%Y")}".html_safe, class: ""
+    - if review.body != ""
+      = content_tag :p, "“#{review.body}”".html_safe
+
+    
+:javascript
+  $(".review .rating").raty({
+      path: "/assets/raty",
+      hintList: ['', '', '', '', '', ''],
+      readOnly: true,
+      start: function() {return $(this).data("score")}
+  });  

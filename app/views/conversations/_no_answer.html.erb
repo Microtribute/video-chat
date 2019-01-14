@@ -1,0 +1,7 @@
+<h3>No answer</h3>
+<p>Hm... Looks like <%= @conversation.lawyer.full_name %> isn't actually available right now.</p>
+<p>If you write <%= @conversation.lawyer.first_name %> a note about what you wanted to talk about, <%= @conversation.lawyer.first_name %> will be sure to get back on you.</p>
+<div class="input text"><%= text_area_tag :message, "", style: "width: 400px; height: 100px;" %></div>
+<%= hidden_field_tag :lawyer_id, @conversation.lawyer.id %>
+<%= submit_tag "Leave message", id: "no_answer_message_submit", class: "button", style: "margin-top: 0.5em" %>
+<p>Or <%= link_to "find another lawyer", lawyers_path, style: "display: inline;" %>.</p>

@@ -1,0 +1,33 @@
+<div style="font-size:1.5em;">
+ List of Lawyers <span style="float: right;"> <%= link_to 'Add New Lawyer', new_admin_lawyer_path %> </span> <hr/>
+<table>
+  <thead>
+    <tr>
+      <td>Name</td> <td>Email</td><td></td>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each{|user|
+      lawyer = Lawyer.find(user.id)
+      %>
+      <tr>
+        <td> <%= link_to user.full_name, user_path(user) %> </td>
+        <td> <%= user.email %> </td>
+        <td>
+          <%= link_to 'View Sessions', user_session_history_path(user.id) %> &nbsp;&nbsp;|
+          <%= link_to user.is_approved? ? 'Disapprove' : "Approve", admin_lawyer_account_approval_path(user.id) %> &nbsp;&nbsp;|
+          <%= link_to "Edit", edit_user_path(user.id) %> &nbsp;&nbsp;|
+          <%= link_to "Remove", admin_lawyer_path(user.id), :method =>:delete, :confirm =>"Are you sure?" %> &nbsp;&nbsp;|
+          <%= link_to "View profile", attorney_path(lawyer, slug: lawyer.slug), :target => 'blank' %> &nbsp;&nbsp;|   
+          <% if lawyer.homepage_image.nil? %>
+            <%= link_to "Create Image", admin_lawyer_hm_image_path(lawyer) %>
+          <% else %>
+            <%= link_to "Remove Image", admin_homepage_image_path(lawyer.homepage_image.id), :method =>:delete, :confirm =>"Are you sure?" %>
+          <% end %>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+</div>
+

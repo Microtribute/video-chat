@@ -1,0 +1,29 @@
+<%= simple_form_for @review, remote: true do |f| %>
+  <h3>Tell us about that session. Your review will be anonymous.</h3>
+  <%= f.input :rating, as: :hidden, input_html: { value: 0 } %>
+  <%= f.input :lawyer_id, as: :hidden, input_html: { value: @conversation.lawyer.id } %>
+  <%= f.input :conversation_id, as: :hidden, input_html: { value:  @conversation.id } %>
+  <%= f.input :purpose, label: "What did #{@conversation.lawyer.full_name} do for you?", input_html: { value: "Legal advice" } %>
+  <%= f.label "Your rating of the session" %>
+  <div id="rating_stars"></div>
+  <p> Your review of this session:</p>
+  <%= f.input :body, label: false, placeholder: "Write a review about how valuable this session was" %>
+  <%= f.submit "Submit review", class: "button" %>
+<% end %>
+
+<div class="thank-you" style="display: none;">
+  <h3>Thank you for your review!</h3>
+</div>
+
+<script>
+  $(document).ready(function(){  
+    $("form.simple_form.new_review").on("submit", function(event){
+      var score = $("form.simple_form.new_review input[name=score]").val();
+      if(score===""){
+        event.preventDefault();
+        alert("Please choose rating of conversation");
+        event.stopPropagation();
+      }
+    })
+  });
+</script>

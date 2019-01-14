@@ -1,0 +1,37 @@
+List of Recent Sessions!<hr/>
+<% if @conversations.size.zero? %>
+  No conversations to list!
+<% else %>
+  Summary of sessions: <br/><br/>
+  <table>
+    <thead>
+      <tr>
+        <td> Lawyer Name </td>
+        <td> Client Name </td>
+        <td> Session Start </td>
+        <td> Duration of Session </td>
+        <td> Paid Duration </td>
+        <td> Rate </td>
+        <td> Amount for Lawyer</td>
+        <td> Amount Billed</td>
+        <td> Consultation Type</td>
+      </tr>
+    </thead>
+    <tbody>
+      <% @conversations.each{|con| %>
+        <tr>
+          <td> <%= con.lawyer_name %> </td>
+          <td> <%= con.client_name %> </td>
+          <td> <%= con.start_date %> </td>
+          <td> <%= seconds_in_string con.duration %> </td>
+          <td> <%= seconds_in_string con.billable_time %> </td>
+          <td> <%= number_to_currency con.lawyer_rate %>/min </td>
+          <td> <%= number_to_currency con.lawyer_earning %> </td>
+          <td> <%= number_to_currency con.billed_amount %> </td>
+          <td> <%= con.consultation_type unless con.consultation_type.nil? %> </td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table><br/><br/>
+<% end %>
+
